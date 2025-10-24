@@ -1,0 +1,78 @@
+[
+  {
+    "id": "corte",
+    "nome": "Corte",
+    "setor": "Serralheria",
+    "profissional": "Operador de Máquina Pleno",
+    "dependeMedidas": true,
+    "dependeFlange": false,
+    "operacaoConjunto": false,
+    "tempos": [
+      { "min": 1, "max": 3.9, "setup": 2, "operacao": 1.5 },
+      { "min": 4, "max": 6, "setup": 4, "operacao": 4.5 },
+      { "min": 6.1, "max": 12, "setup": 5, "operacao": 6.5 }
+    ]
+  },
+  {
+    "id": "plasma",
+    "nome": "Plasma",
+    "setor": "Serralheria",
+    "profissional": "Operador de Plasma",
+    "dependeMedidas": true,
+    "dependeFlange": true,
+    "operacaoConjunto": false,
+    "temposFlang": [
+      { "min": 1, "max": 3.9, "setup": 5, "operacao": 5 },
+      { "min": 4, "max": 6, "setup": 5, "operacao": 7 },
+      { "min": 6.1, "max": 12, "setup": 5, "operacao": 10 }
+    ],
+    "temposEng": [
+      { "min": 1, "max": 3.9, "setup": 2, "operacao": 2 },
+      { "min": 4, "max": 6, "setup": 1, "operacao": 3 },
+      { "min": 6.1, "max": 12, "setup": 2, "operacao": 6 }
+    ]
+  },
+  {
+    "id": "emendas",
+    "nome": "Emendas",
+    "setor": "Serralheria",
+    "profissional": "Soldador Sênior",
+    "dependeMedidas": false,
+    "dependeFlange": false,
+    "operacaoConjunto": false,
+    "tempos": [
+      { "min": 1, "max": 12, "setup": 5, "operacao": 5 }
+    ]
+  },
+  {
+    "id": "soldagem_base",
+    "nome": "Soldagem Base",
+    "setor": "Solda",
+    "profissional": "Soldador Especializado",
+    "dependeMedidas": true,
+    "dependeFlange": true,
+    "operacaoConjunto": false,
+    "temposFlang": [
+      { "min": 1, "max": 3.9, "setup": 2, "operacao": 1,5 },
+      { "min": 4, "max": 6, "setup": 4, "operacao": 4,5 },
+      { "min": 6.1, "max": 12, "setup": 5, "operacao": 6,5 }
+    ],
+    "temposEng": [
+      { "min": 1, "max": 3.9, "setup": 0, "operacao": 0 },
+      { "min": 4, "max": 6, "setup": 0, "operacao": 0 },
+      { "min": 6.1, "max": 12, "setup": 0, "operacao": 0 }
+    ]
+  },
+  {
+    "id": "acabamento",
+    "nome": "Acabamento",
+    "setor": "Acabamento",
+    "profissional": "Auxiliar",
+    "dependeMedidas": false,
+    "dependeFlange": false,
+    "operacaoConjunto": true,
+    "tempos": [
+      { "min": 1, "max": 12, "setup": 5, "operacao": 5 }
+    ]
+  }
+]
