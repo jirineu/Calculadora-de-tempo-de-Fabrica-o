@@ -1,0 +1,731 @@
+/* Reset Básico */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+body {
+    display: flex;
+    background-color: #f4f7f9;
+    min-height: 100vh;
+}
+
+/* --- SIDEBAR (Menu Lateral) --- */
+.sidebar {
+    width: 250px;
+    background-color: #2c3e50; /* Azul Escuro */
+    color: white;
+    padding: 20px;
+    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.2);
+    display: flex;
+    flex-direction: column;
+    position: sticky;
+    top: 0;
+    height: 100vh;
+}
+
+.sidebar h2 {
+    text-align: center;
+    margin-bottom: 30px;
+    color: #ecf0f1;
+}
+
+.sidebar nav a {
+    display: block;
+    color: #bdc3c7;
+    text-decoration: none;
+    padding: 15px 10px;
+    margin: 5px 0;
+    border-radius: 5px;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+.sidebar nav a:hover {
+    background-color: #34495e;
+    color: white;
+}
+
+.sidebar nav a.active {
+    background-color: #1abc9c; /* Verde/Ciano - Destaque */
+    color: white;
+}
+
+.sidebar nav a .fas {
+    margin-right: 10px;
+}
+
+
+/* --- CONTEÚDO PRINCIPAL E NAVEGAÇÃO DE PÁGINAS --- */
+.main-content {
+    flex-grow: 1;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+}
+
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px;
+    margin-bottom: 20px;
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+header h1 {
+    color: #333;
+    font-size: 1.8em;
+}
+
+/* Esconder e Mostrar Páginas */
+.page {
+    display: none;
+    padding: 10px 0;
+}
+
+.active-page {
+    display: block;
+}
+
+/* --- DASHBOARD GRID e Cards --- */
+.dashboard-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 20px;
+}
+
+.data-card {
+    background-color: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+    transition: transform 0.2s;
+}
+.data-card:hover {
+    transform: translateY(-3px);
+}
+
+.data-card .icon {
+    font-size: 2.5em;
+    margin-bottom: 10px;
+    color: #1abc9c;
+}
+
+.card-title {
+    color: #7f8c8d;
+    font-size: 0.9em;
+    margin-bottom: 5px;
+}
+
+.card-value {
+    font-size: 2em;
+    font-weight: bold;
+    color: #34495e;
+}
+
+.chart-area {
+    grid-column: 1 / -1;
+    background-color: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    min-height: 300px;
+}
+
+/* --- FORMULÁRIOS E BOTÕES (AJUSTES PARA LAYOUT DE CALCULADORA) --- */
+.form-grid {
+    background-color: white;
+    padding: 25px; /* Aumenta o padding */
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05); /* Sombra mais destacada */
+    display: grid;
+    gap: 20px; /* Aumenta o gap */
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); /* Torna o grid responsivo */
+    align-items: center;
+}
+
+/* Estilo geral para inputs/selects */
+input, select, button {
+    padding: 12px; /* Aumenta o padding dos campos */
+    border-radius: 6px; /* Aumenta o arredondamento */
+    font-size: 1em;
+    transition: border-color 0.3s;
+}
+
+input, select {
+    border: 1px solid #c0c0c0; /* Borda mais suave */
+    width: 100%;
+}
+input:focus, select:focus {
+    border-color: #1abc9c; /* Destaca a borda no foco */
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(26, 188, 156, 0.2);
+}
+
+/* Título da Seção do Formulário */
+.form-grid h2 {
+    grid-column: 1 / -1;
+    color: #34495e;
+    margin-bottom: 10px;
+}
+
+/* Controles de Botão Principal */
+.form-grid > button.btn-primary {
+    grid-column: span 1;
+    margin-top: 10px;
+}
+
+.btn-primary {
+    background-color: #1abc9c;
+    color: white;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.1s;
+}
+
+.btn-primary:hover {
+    background-color: #16a085;
+    transform: translateY(-1px);
+}
+
+.btn-secondary {
+    background-color: #3498db;
+    color: white;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.1s;
+}
+
+.btn-secondary:hover {
+    background-color: #2980b9;
+    transform: translateY(-1px);
+}
+
+.btn-danger {
+    background-color: #e74c3c;
+    color: white;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.1s;
+}
+
+.btn-danger:hover {
+    background-color: #c0392b;
+    transform: translateY(-1px);
+}
+
+/* Estilo para Composição de Materiais (Produtos Page) */
+.form-section {
+    grid-column: 1 / -1; /* Ocupa todas as colunas no grid */
+    border: 1px solid #ccc; /* Borda mais visível */
+    padding: 20px;
+    border-radius: 6px;
+    margin-top: 20px;
+    background-color: #fcfcfc;
+}
+
+.add-material-controls {
+    display: grid;
+    grid-template-columns: 3fr 1fr 1fr;
+    gap: 15px;
+    margin-top: 15px;
+    align-items: center;
+}
+
+.material-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 0;
+    border-bottom: 1px dashed #ddd;
+    font-size: 0.95em;
+}
+.material-item:last-child {
+    border-bottom: none;
+}
+
+/* --- TABELAS --- */
+.data-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 25px;
+    background-color: white;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.data-table th, .data-table td {
+    padding: 14px 18px;
+    text-align: left;
+    border-bottom: 1px solid #e0e0e0;
+}
+
+.data-table th {
+    background-color: #eaf0f4;
+    color: #34495e;
+    font-weight: 600;
+    text-transform: uppercase;
+    font-size: 0.9em;
+}
+
+.data-table tbody tr:hover {
+    background-color: #f5f8fb;
+}
+
+.data-table .actions-cell {
+    width: 1%;
+    white-space: nowrap;
+}
+
+/* --- CLIENTE DETALHE PAGE --- */
+.cliente-info-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 20px;
+    margin-top: 20px;
+}
+
+.info-card {
+    background-color: white;
+    padding: 25px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.info-card h3 {
+    margin-bottom: 15px;
+    color: #1abc9c;
+    border-bottom: 1px solid #eee;
+    padding-bottom: 5px;
+    font-size: 1.3em;
+}
+
+/* ================================================= */
+/* ESTILOS DO MÓDULO ROTEIROS (Diluídos de roteiros.html) */
+/* ================================================= */
+:root {
+    /* Cores do roteiros.html (Priorizando o estilo do roteiros.html para Roteiros) */
+    --primary-color: #007bff; /* Azul Padrão */
+    --secondary-color: #28a745; /* Verde Padrão */
+    --danger-color: #dc3545;
+}
+
+/* Navegação Interna (Aba) */
+#roteiros-page #control-nav {
+    display: flex;
+    margin-bottom: 20px;
+    border-bottom: 2px solid #ddd;
+}
+
+#roteiros-page .nav-tab {
+    padding: 10px 20px;
+    cursor: pointer;
+    transition: background-color 0.2s, color 0.2s;
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
+    color: #6c757d;
+    font-weight: 500;
+}
+
+#roteiros-page .nav-tab:hover {
+    color: #34495e;
+    background-color: #f8f9fa;
+}
+
+#roteiros-page .nav-tab.active {
+    color: var(--primary-color);
+    border-bottom: 2px solid var(--primary-color);
+    background-color: white;
+    margin-bottom: -2px; /* Para 'esconder' a linha de baixo */
+}
+
+#roteiros-page .nav-tab .fas {
+    margin-right: 8px;
+}
+
+/* Conteúdo Interno */
+#roteiros-page .internal-page {
+    display: none;
+    background-color: white;
+    padding: 25px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+#roteiros-page .internal-page.active {
+    display: block;
+}
+
+/* =================================== */
+/* === NOVOS ESTILOS - ROTEIRO DINÂMICO === */
+/* =================================== */
+
+/* 1. Grid Principal (2 Colunas) */
+#roteiro-page {
+    display: grid;
+    grid-template-columns: 1fr 1fr; /* Duas colunas de tamanho igual */
+    grid-template-rows: auto auto 1fr auto; /* Define as linhas */
+    gap: 25px;
+}
+
+/* 2. Inputs (Linha 1) */
+#roteiro-page .input-group:nth-of-type(1) {
+    grid-column: 1 / 2; /* Coluna 1 */
+    grid-row: 1;
+}
+#roteiro-page .input-group:nth-of-type(2) {
+    grid-column: 2 / 3; /* Coluna 2 */
+    grid-row: 1;
+}
+
+/* 3. Título "Itens Customizáveis" (Linha 2, Coluna 1) */
+#roteiro-page h2:nth-of-type(1) {
+    grid-column: 1 / 2;
+    grid-row: 2;
+    margin-bottom: 0;
+    align-self: end; /* Alinha na base */
+}
+
+/* 4. Lista "Itens Disponíveis" (Linha 3, Coluna 1) */
+#itensDisponiveis {
+    grid-column: 1 / 2;
+    grid-row: 3;
+    /* Reset de margens (já tem gap no grid) */
+    margin-top: 0; 
+    margin-bottom: 0;
+    /* Organiza os itens em 1 coluna */
+    display: grid;
+    grid-template-columns: 1fr; 
+    gap: 15px;
+    align-content: start; /* Impede que estiquem */
+    overflow-y: auto; /* Adiciona scroll se necessário */
+    max-height: 500px; /* Limita a altura */
+    padding: 5px;
+    background: #fdfdfd;
+    border: 1px solid #f0f0f0;
+    border-radius: 6px;
+}
+
+/* 5. Título "Roteiro Atual" (Linha 2, Coluna 2) */
+#roteiro-page h2:nth-of-type(2) {
+    grid-column: 2 / 3;
+    grid-row: 2;
+    margin-bottom: 0;
+    align-self: end;
+}
+
+/* 6. Lista "Roteiro Atual" (Linha 3, Coluna 2) */
+#roteiroAtual {
+    grid-column: 2 / 3;
+    grid-row: 3;
+    min-height: 300px; /* Garante altura mínima */
+    overflow-y: auto;
+    max-height: 500px; /* Limita a altura */
+    align-content: start;
+    padding: 5px;
+    background: #fdfdfd;
+    border: 1px solid #f0f0f0;
+    border-radius: 6px;
+}
+
+/* 7. Botão "Adicionar Novo Item" (Linha 4, Coluna 1) */
+#roteiro-page > .btn-adicionar {
+    grid-column: 1 / 2;
+    grid-row: 4;
+    justify-self: start; /* Alinha o botão à esquerda */
+    margin-top: 15px;
+}
+
+/* 8. Resultado (Linha 2 a 4, Coluna 2) - Movido para ficar ao lado do Roteiro */
+.resultado {
+    grid-column: 2 / 3;
+    grid-row: 4; /* Colocado abaixo do Roteiro Atual */
+    margin-top: 15px;
+    padding: 20px;
+    border: 2px solid #1abc9c;
+    border-radius: 8px;
+    background-color: #e6fffb;
+    align-self: start; /* Impede que estique */
+}
+/* =================================== */
+/* === FIM NOVOS ESTILOS === */
+/* =================================== */
+
+
+/* Estilos de Formulário (Roteiro Dinâmico) */
+#roteiro-page .input-group {
+    margin-bottom: 15px;
+    background-color: #f8f9fa;
+    padding: 15px;
+    border-radius: 6px;
+    border: 1px solid #e9ecef;
+}
+
+#roteiro-page .input-group label {
+    display: block;
+    font-weight: 500;
+    margin-bottom: 5px;
+    color: #34495e;
+}
+
+/* Lista de Itens Disponíveis - ESTILO DO ITEM (.item-config) */
+/* O .item-card foi removido pois o JS usa .item-config */
+.item-config {
+    display: grid;
+    grid-template-columns: 1fr auto; /* Coluna 1: Info, Coluna 2: Botões */
+    gap: 5px 15px;
+    border: 1px solid #e0e0e0;
+    padding: 15px;
+    border-radius: 6px;
+    background-color: white;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.03);
+    transition: box-shadow 0.2s;
+}
+.item-config:hover {
+    box-shadow: 0 4px 8px rgba(0,0,0,0.06);
+}
+
+/* Nome do Item (Linha 1) */
+.item-config span:nth-of-type(1) {
+    grid-column: 1 / 3;
+    font-weight: bold;
+    font-size: 1.1em;
+    color: #34495e;
+    margin-bottom: 5px;
+}
+
+/* Profissional */
+.item-config span:nth-of-type(2) {
+    font-size: 0.9em;
+    color: #555;
+}
+.item-config span:nth-of-type(2)::before {
+    content: 'Profissional: '; font-weight: 500; color: #777;
+}
+
+/* Maquinário */
+.item-config span:nth-of-type(3) {
+    font-size: 0.9em;
+    color: #555;
+}
+.item-config span:nth-of-type(3)::before {
+    content: 'Máquina: '; font-weight: 500; color: #777;
+}
+
+/* Info Tempo (Linha 4) */
+.item-config span:nth-of-type(4) {
+    grid-column: 1 / 3;
+    font-size: 0.9em;
+    color: var(--primary-color);
+    font-style: italic;
+    margin-top: 5px;
+}
+
+/* Botões (Área de Ações) */
+.item-config span:nth-of-type(5) {
+    grid-column: 1 / 3;
+    text-align: right;
+    padding-top: 10px;
+    margin-top: 10px;
+    border-top: 1px dashed #eee;
+}
+
+/* Botões dentro do Item-config */
+.item-config .btn-editar,
+.item-config .btn-adicionar,
+.item-config .btn-remover {
+    padding: 5px 10px;
+    font-size: 0.9em;
+    margin-left: 5px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    color: white;
+}
+.item-config .btn-editar { background-color: #f0ad4e; } /* Laranja */
+.item-config .btn-adicionar { background-color: var(--secondary-color); } /* Verde */
+.item-config .btn-remover { background-color: var(--danger-color); } /* Vermelho */
+
+
+.btn-adicionar {
+    background-color: var(--primary-color);
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.btn-adicionar:hover {
+    background-color: #0056b3;
+}
+
+
+/* Roteiro Atual (Itens Calculados) - MELHORADO COM FLEXBOX */
+.roteiro-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border: 1px solid #e9ecef;
+    padding: 15px;
+    border-radius: 6px;
+    margin-bottom: 10px;
+    background-color: #f8f9fa;
+}
+
+/* Div 1: Info (Nome, Prof, Maq) */
+.roteiro-item > div:first-child {
+    flex-grow: 1;
+}
+.roteiro-item strong {
+    font-size: 1.1em;
+    color: #34495e;
+    display: block; /* Quebra linha */
+}
+.roteiro-item p.tempo-info { /* (JS usa .tempo-info para o <p>) */
+    font-size: 0.85em;
+    color: #6c757d;
+    margin: 0;
+}
+
+/* Div 2: Tempos (Setup, Op, Total) */
+.roteiro-item > div:nth-child(2) {
+    flex-shrink: 0;
+    margin: 0 15px;
+    text-align: right;
+    font-size: 0.9em;
+    color: #555;
+    white-space: nowrap; /* Impede quebra de linha */
+}
+/* O JS usa .tempo-info para os spans também */
+.roteiro-item > div:nth-child(2) .tempo-info {
+    display: inline-block;
+    margin-left: 5px;
+}
+
+/* Div 3: Botão Remover */
+.roteiro-item > div:last-child {
+    flex-shrink: 0;
+}
+.btn-remover {
+    background-color: transparent;
+    border: none;
+    color: var(--danger-color);
+    font-size: 1.2em;
+    cursor: pointer;
+    padding: 5px;
+}
+.btn-remover:hover {
+    color: #c0392b;
+}
+
+/* Área de Resultado */
+.resultado h2 {
+    color: #16a085;
+    border-bottom: 1px solid #1abc9c;
+    padding-bottom: 10px;
+    margin-bottom: 10px;
+}
+
+.resultado p .detalhe-tempo {
+    font-weight: bold;
+    font-size: 1.1em;
+}
+
+/* ESTILO ADICIONADO: Detalhamento por Profissional */
+.professional-breakdown {
+    margin-top: 20px;
+    padding-top: 15px;
+    border-top: 1px solid #1abc9c;
+}
+
+.professional-breakdown strong {
+    display: block;
+    margin-bottom: 10px;
+    color: #333;
+}
+
+.breakdown-item {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    padding: 10px;
+    border-radius: 4px;
+    background-color: #c9fff3; /* Tom mais claro da caixa */
+    margin-bottom: 5px;
+    font-size: 0.9em;
+}
+
+.breakdown-item span:first-child {
+    font-weight: 500;
+    color: #000;
+}
+
+.breakdown-item span:last-child {
+    font-weight: 500;
+    color: #16a085; /* Verde escuro */
+}
+
+
+/* Estilos de Formulário (Maquinário/Funcionários) */
+#maquinario-form, #funcionario-form {
+    padding: 25px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    background-color: #f9f9f9;
+}
+
+#maquinario-form .form-row, #funcionario-form .form-row {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 20px;
+    margin-bottom: 15px;
+}
+
+.form-row label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: 500;
+}
+
+/* Estilo para Tabela de Funcionários (M.O.) */
+#funcionarios-list td:nth-child(3) { /* Coluna Salário/Hora */
+    font-weight: bold;
+    color: #28a745;
+}
+
+/* --- MODAL (Para cadastro/edição de Item de Roteiro) --- */
+.modal { display: none; position: fixed; z-index: 10; left: 0; top: 0; width: 100%; height: 100%; overflow: auto; background-color: rgba(0,0,0,0.4); padding-top: 30px; }
+.modal-content { background-color: #fefefe; margin: 5% auto; padding: 20px; border: 1px solid #888; width: 90%; max-width: 650px; border-radius: 8px; }
+.close-btn { color: #aaa; float: right; font-size: 28px; font-weight: bold; }
+.close-btn:hover, .close-btn:focus { color: #000; text-decoration: none; cursor: pointer; }
+
+.tempo-section { border: 1px dashed #ccc; padding: 10px; margin-top: 10px; margin-bottom: 15px; }
+
+.tempo-grid { 
+    display: grid; 
+    grid-template-columns: 1fr 1fr 1fr; 
+    gap: 5px; 
+    margin-bottom: 5px; 
+    align-items: center; /* Alinha os itens verticalmente */
+}
+
+.tempo-grid input {
+    padding: 8px;
+    font-size: 0.9em;
+}
+
+.tabela-header { font-weight: bold; margin-top: 10px; color: var(--primary-color); }
+
+.salary-info { 
+    font-size: 0.9em; 
+    color: #333; 
+    margin-top: 5px; 
+    display: block;
+}

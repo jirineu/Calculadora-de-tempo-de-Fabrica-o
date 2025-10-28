@@ -1,212 +1,289 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="pt-br">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Calculadora Dinâmica de Roteiro de Fabricação</title>
-    <style>
-        /* ================================================= */
-        /* CSS (Estilos Atualizados)                    */
-        /* ================================================= */
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f4f4f9;
-            color: #333;
-            padding: 20px;
-        }
-
-        .container {
-            max-width: 950px;
-            margin: 0 auto;
-            background-color: #fff;
-            padding: 30px;
-            border-radius: 8px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-        }
-
-        h1 {
-            color: #0056b3;
-            text-align: center;
-            margin-bottom: 30px;
-        }
-
-        h2 {
-            border-bottom: 2px solid #eee;
-            padding-bottom: 5px;
-            margin-top: 25px;
-            color: #333;
-        }
-
-        .input-group, .process-step {
-            margin-bottom: 20px;
-            padding: 15px;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-        }
-        
-        /* Estilo para as áreas de entrada */
-        input[type="number"], select, input[type="text"] {
-            width: 100%;
-            padding: 8px;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-            box-sizing: border-box; 
-            margin-top: 5px;
-        }
-
-        /* Estilos dos botões */
-        button {
-            background-color: #007bff;
-            color: white;
-            padding: 10px 18px;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 14px;
-            transition: background-color 0.3s;
-            margin-right: 5px;
-        }
-
-        button:hover {
-            background-color: #0056b3;
-        }
-
-        .btn-adicionar {
-            background-color: #28a745;
-        }
-        
-        /* O botão dobrar foi removido da interface, mantendo o estilo para referência interna */
-        .btn-dobrar {
-            background-color: #ff9800; 
-            color: #333;
-        }
-
-        .btn-remover {
-            background-color: #dc3545;
-        }
-        
-        .btn-editar {
-             background-color: #ffc107;
-             color: #333;
-        }
-
-        /* Área de Roteiro e Itens */
-        #itensDisponiveis, #roteiroAtual {
-            border: 1px solid #ccc;
-            padding: 15px;
-            border-radius: 6px;
-        }
-
-        .item-config {
-            padding: 10px;
-            margin-bottom: 8px;
-            border-bottom: 1px dashed #eee;
-            /* Nova grade: Nome | Configuração | Tempo | Ações */
-            grid-template-columns: 2fr 1fr 1fr 1fr; 
-            display: grid; 
-            gap: 10px;
-            align-items: center;
-        }
-        
-        .roteiro-item {
-            padding: 10px;
-            margin-bottom: 8px;
-            border-bottom: 1px dashed #eee;
-            /* Nova grade: Nome/Fator | Detalhes Tempo | Vazio | Ações */
-            grid-template-columns: 2fr 1.5fr 1fr 0.5fr; 
-            display: grid; 
-            gap: 10px;
-            align-items: center;
-        }
-
-
-        .item-config:last-child, .roteiro-item:last-child {
-            border-bottom: none;
-        }
-
-        .tempo-info {
-            font-size: 0.9em;
-            color: #6c757d;
-        }
-        
-        /* Estilo para itens adicionados automaticamente */
-        .roteiro-item.auto-added {
-            background-color: #e6f7ff; 
-            border-left: 4px solid #007bff;
-        }
-        
-        /* Estilo para itens com tempo dobrado/multiplicado */
-        .roteiro-item.multiplicado {
-            background-color: #fff3e0; /* Amarelo claro */
-            border-left: 4px solid #ff9800;
-        }
-
-        /* Área de Resultado (mantida) */
-        .resultado {
-            margin-top: 30px;
-            padding: 20px;
-            background-color: #e9f7ff;
-            border: 1px solid #cce5ff;
-            border-radius: 4px;
-        }
-
-        .resultado h2 {
-            color: #0056b3;
-            border-bottom: 2px solid #0056b3;
-            padding-bottom: 10px;
-            margin-top: 0;
-        }
-        
-        .detalhe-tempo {
-            font-weight: bold;
-            color: #0056b3;
-        }
-        
-        /* Estilos para o Modal (mantidos) */
-        .modal { display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; overflow: auto; background-color: rgba(0,0,0,0.4); padding-top: 30px; }
-        .modal-content { background-color: #fefefe; margin: 5% auto; padding: 20px; border: 1px solid #888; width: 90%; max-width: 650px; border-radius: 8px; }
-        .close-btn { color: #aaa; float: right; font-size: 28px; font-weight: bold; }
-        .close-btn:hover, .close-btn:focus { color: #000; text-decoration: none; cursor: pointer; }
-        .tempo-section { border: 1px dashed #ccc; padding: 10px; margin-top: 10px; margin-bottom: 15px; }
-        .tempo-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 5px; margin-bottom: 5px; }
-        .tabela-header { font-weight: bold; margin-top: 10px; color: #0056b3; }
-    </style>
+    <title>Mini ERP: Produção e Vendas</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
+    <div class="sidebar">
+        <h2>Mini ERP</h2>
+        <nav>
+            <a href="#dashboard" data-page="dashboard" class="nav-link active"><i class="fas fa-tachometer-alt"></i> Dashboard</a>
+            <a href="#estoque" data-page="estoque" class="nav-link"><i class="fas fa-box"></i> Materiais</a>
+            <a href="#produtos" data-page="produtos" class="nav-link"><i class="fas fa-cube"></i> Produtos</a>
+            <a href="#roteiros" data-page="roteiros" class="nav-link"><i class="fas fa-route"></i> Roteiros</a>
+            <a href="#vendas" data-page="vendas" class="nav-link"><i class="fas fa-shopping-cart"></i> Vendas</a>
+            <a href="#clientes" data-page="clientes" class="nav-link"><i class="fas fa-users"></i> Clientes</a>
+        </nav>
+    </div>
 
-    <div class="container">
-        <h1>Configuração Dinâmica de Roteiro de Fabricação</h1>
-
-        <div class="input-group">
-            <label for="tamanhoPoste">Tamanho do Poste (metros):</label>
-            <input type="number" id="tamanhoPoste" step="0.1" min="1" max="12" placeholder="Ex: 5.5" onchange="renderizarRoteiro()" onkeyup="renderizarRoteiro()">
-        </div>
-
-        <div class="input-group">
-            <label for="tipoFlange">Tipo de Poste para Plasma:</label>
-            <select id="tipoFlange" onchange="renderizarRoteiro()">
-                <option value="flang">Flangeado (Flang)</option>
-                <option value="eng">Engastado (Eng)</option>
-            </select>
-            <p style="font-size: 0.9em; color: #007bff; margin-top: 8px;">* Selecionar **Flangeado** adiciona automaticamente os itens **Soldagem Base** e **Acabamento** ao roteiro.</p>
-        </div>
+    <div class="main-content">
+        <header>
+            <h1 id="page-title">Dashboard Principal</h1>
+            <div class="user-info">Bem-vindo(a), Usuário(a)</div>
+        </header>
         
-        <h2>Itens de Roteiro Customizáveis (Base de Dados)</h2>
-        <div id="itensDisponiveis">
-             </div>
+        <main class="content-wrapper">
+            
+            <section id="dashboard-page" class="page active-page">
+                <div class="dashboard-grid">
+                    <div class="data-card"><i class="fas fa-dollar-sign icon"></i><p class="card-title">Faturamento Total</p><p class="card-value">R$ <span id="faturamento-value">0,00</span></p></div>
+                    <div class="data-card"><i class="fas fa-clock icon"></i><p class="card-title">Clientes Cadastrados</p><p class="card-value"><span id="clientes-value">0</span></p></div>
+                    <div class="data-card"><i class="fas fa-warehouse icon"></i><p class="card-title">Produtos Finalizados</p><p class="card-value"><span id="produtos-cadastrados-value">0</span></p></div>
+                    <div class="chart-area" id="chart-vendas"><h2>Vendas por Período</h2><p>Área para Gráfico de Vendas.</p></div>
+                </div>
+            </section>
+            
+            <section id="estoque-page" class="page">
+                <h2>Cadastro de Materiais (Custo Fracionável)</h2>
+                <form id="material-form" class="form-grid">
+                    <input type="text" id="material-nome" placeholder="Nome do Material (Ex: Litro de Tinta)" required>
+                    <input type="number" id="material-custo" placeholder="Custo Unitário Base (R$)" step="0.01" required>
+                    <input type="number" id="material-qtd" placeholder="Qtd. (N/A)" value="0" disabled> 
+                    <button type="submit" class="btn-primary">Cadastrar/Atualizar Material</button>
+                </form>
+                <h3 style="margin-top: 30px;">Lista de Materiais Cadastrados</h3>
+                <table id="materiais-list" class="data-table">
+                    <thead>
+                        <tr><th>ID</th><th>Nome</th><th>Custo Base (R$)</th><th>Ações</th></tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                </table>
+            </section>
+            
+            <section id="produtos-page" class="page">
+                <h2>Criação de Produto Final</h2>
+                <form id="produto-form" class="form-grid">
+                    <input type="text" id="produto-nome" placeholder="Nome do Produto (Ex: Poste Curvo)" required>
+                    <input type="text" id="produto-sku" placeholder="SKU (Ex: P123)" required>
+                    <input type="number" id="produto-preco" placeholder="Preço de Venda (R$)" step="0.01" required>
+                    <div class="custos-info">
+                        Custo Mat. Prima: R$ <span id="custo-materia-prima">0,00</span> | Custo Total (Estimado): R$ <span id="custo-total-produto">0,00</span>
+                    </div>
+                    <button type="submit" class="btn-primary">Salvar Produto</button>
+                    <input type="hidden" id="produto-id-edicao">
+                </form>
 
-        <button class="btn-adicionar" onclick="abrirModalAdicionar()">+ Adicionar Novo Item</button>
+                <div class="add-material-to-product">
+                    <h3>Adicionar Material na Composição</h3>
+                    <div class="add-material-controls">
+                        <select id="select-material" required>
+                            <option value="">Selecione um Material</option>
+                        </select>
+                        <input type="number" id="qtd-material" placeholder="Qtd. Usada (Ex: 0.5, 2)" step="0.01" min="0" required>
+                        <button class="btn-secondary" onclick="addMaterialToProduct()">Adicionar</button>
+                    </div>
+                    <div id="materiais-compo-list" class="composicao-list">
+                        <p style="color:#7f8c8d;">Nenhum material adicionado.</p>
+                    </div>
+                </div>
 
-        <h2>Roteiro Atual do Poste</h2>
-        <div id="roteiroAtual">
-            <p style="color: #6c757d;">Selecione os itens acima e clique em "Adicionar ao Roteiro".</p>
-        </div>
+                <h3 style="margin-top: 30px;">Lista de Produtos Cadastrados</h3>
+                <table id="produtos-list" class="data-table">
+                    <thead>
+                        <tr><th>SKU</th><th>Nome</th><th>Custo Total (R$)</th><th>Preço Venda (R$)</th><th>Ações</th></tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                </table>
+            </section>
+            
+            <section id="roteiros-page" class="page">
+                <div class="alert-prod" id="product-alert">
+                    <i class="fas fa-exclamation-triangle"></i> ATENÇÃO: Selecione um Produto do Mini ERP (Funcionalidade Externa) para Habilitar.
+                </div>
+                
+                <div id="main-content" style="display:none;">
+                    <div id="control-nav">
+                        <div class="nav-tab active" data-page="roteiro">
+                            <i class="fas fa-route"></i> Roteiro Dinâmico
+                        </div>
+                        <div class="nav-tab" data-page="maquinarios">
+                            <i class="fas fa-industry"></i> Maquinários
+                        </div>
+                        <div class="nav-tab" data-page="funcionarios">
+                            <i class="fas fa-users"></i> Funcionários (M.O.)
+                        </div>
+                    </div>
 
-        <div class="resultado" id="resultado">
-            <h2>Tempo Total de Operação (Roteiro)</h2>
-            <p>Selecione um tamanho de poste e adicione itens ao roteiro.</p>
-        </div>
+                    <div id="roteiro-page" class="internal-page active">
+                        
+                        <div class="input-group">
+                            <label for="tamanhoPoste">Tamanho do Poste (metros):</label>
+                            <input type="number" id="tamanhoPoste" step="0.1" min="1" max="12" placeholder="Ex: 5.5" onchange="renderizarRoteiro()" onkeyup="renderizarRoteiro()">
+                        </div>
 
+                        <div class="input-group">
+                            <label for="tipoFlange">Tipo de Poste para Plasma:</label>
+                            <select id="tipoFlange" onchange="renderizarRoteiro()">
+                                <option value="flang">Flangeado (Flang)</option>
+                                <option value="eng">Engastado (Eng)</option>
+                            </select>
+                            <p style="font-size: 0.9em; color: var(--primary-color); margin-top: 8px;">* Selecionar **Flangeado** adiciona automaticamente os itens **Soldagem Base** e **Acabamento** ao roteiro.</p>
+                        </div>
+                        
+                        <h2>Itens de Roteiro Customizáveis (Base de Dados)</h2>
+                        <div id="itensDisponiveis">
+                        </div>
+
+                        <button class="btn-adicionar" onclick="abrirModalAdicionar()">+ Adicionar Novo Item</button>
+
+                        <h2>Roteiro Atual do Produto</h2>
+                        <div id="roteiroAtual">
+                            <p style="color: #6c757d;">Selecione os itens acima e clique em "Adicionar ao Roteiro".</p>
+                        </div>
+
+                        <div class="resultado" id="resultado">
+                            <h2>Tempo e Custo Total de Mão de Obra</h2>
+                            <p>Selecione um tamanho de poste e adicione itens ao roteiro.</p>
+                        </div>
+                    </div>
+
+                    <div id="maquinarios-page" class="internal-page">
+                        <h2>Adicionar Novo Maquinário</h2>
+                        <form id="maquinario-form">
+                            <div class="form-row">
+                                <div>
+                                    <label for="maquinarioNome">Nome do Maquinário:</label>
+                                    <input type="text" id="maquinarioNome" required>
+                                </div>
+                                <div>
+                                    <label for="maquinarioSetor">Setor:</label>
+                                    <select id="maquinarioSetor" required>
+                                        <option value="">Selecione um Setor</option>
+                                        <option value="Almoxarifado">Almoxarifado</option>
+                                        <option value="Calderaria">Calderaria</option>
+                                        <option value="Expedição">Expedição</option>
+                                        <option value="Montagem">Montagem</option>
+                                        <option value="Pintura">Pintura</option>
+                                        <option value="Recebimento">Recebimento</option>
+                                        <option value="Serralheria">Serralheria</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div style="grid-column: span 2;">
+                                    <label for="maquinarioProfissionalId">Profissional Habilitado (Principal):</label>
+                                    <select id="maquinarioProfissionalId" required>
+                                        <option value="">Selecione um Funcionário</option>
+                                        </select>
+                                </div>
+                            </div>
+                            <button type="submit" class="btn-primary">Salvar Maquinário</button>
+                        </form>
+
+                        <h2 style="margin-top: 30px;">Maquinários Cadastrados</h2>
+                        <table class="data-table">
+                            <thead>
+                                <tr><th>Nome</th><th>Setor</th><th>Profissional Principal</th><th>Ações</th></tr>
+                            </thead>
+                            <tbody id="maquinarios-list">
+                                </tbody>
+                        </table>
+                    </div>
+
+                    <div id="funcionarios-page" class="internal-page">
+                        <h2>Adicionar Novo Funcionário (Mão de Obra)</h2>
+                        <form id="funcionario-form">
+                            <div class="form-row">
+                                <div>
+                                    <label for="funcionarioNome">Nome/Descrição da Função:</label>
+                                    <input type="text" id="funcionarioNome" required>
+                                </div>
+                                <div>
+                                    <label for="funcionarioSalario">Salário Mensal (R$):</label>
+                                    <input type="number" id="funcionarioSalario" step="0.01" min="0" required oninput="calcularCustoHora()">
+                                    <span id="custoHoraDisplay" class="salary-info">Custo/Hora: R$ 0,00 (Salário / 220h)</span>
+                                </div>
+                            </div>
+                            <button type="submit" class="btn-primary">Salvar Funcionário</button>
+                        </form>
+
+                        <h2 style="margin-top: 30px;">Funcionários Cadastrados</h2>
+                        <table class="data-table">
+                            <thead>
+                                <tr><th>Nome</th><th>Salário Mensal</th><th>Custo/Hora</th><th>Ações</th></tr>
+                            </thead>
+                            <tbody id="funcionarios-list">
+                                </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+            <section id="vendas-page" class="page">
+                <h2>Registro de Vendas</h2>
+                <form id="venda-form" class="form-grid">
+                    <input type="text" id="venda-cliente" placeholder="Buscar Cliente (Nome/CPF/CNPJ)" list="cliente-datalist" required>
+                    <datalist id="cliente-datalist"></datalist>
+                    <select id="venda-produto" required>
+                        <option value="">Selecione um Produto</option>
+                    </select>
+                    <input type="number" id="venda-quantidade" placeholder="Quantidade" min="1" required>
+                    <input type="date" id="venda-data" required>
+                    <button type="submit" class="btn-primary" id="btn-registrar-venda" disabled>Registrar Venda</button>
+                    <p style="grid-column: span 2; font-size: 0.9em;">Cliente Selecionado: <span id="cliente-selecionado-display" style="font-weight: bold;">Nenhum</span></p>
+                </form>
+
+                <h3 style="margin-top: 30px;">Histórico de Vendas</h3>
+                <table id="vendas-list" class="data-table">
+                    <thead>
+                        <tr><th>Data</th><th>Cliente</th><th>Produto</th><th>Qtd.</th><th>Preço Un.</th><th>Total (R$)</th></tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                </table>
+            </section>
+            
+            <section id="clientes-page" class="page">
+                <h2>Cadastro de Clientes</h2>
+                <form id="cliente-form" class="form-grid">
+                    <input type="text" id="cliente-nome" placeholder="Nome Completo / Razão Social" required>
+                    <input type="text" id="cliente-cpfcnpj" placeholder="CPF ou CNPJ" required>
+                    <input type="text" id="cliente-endereco" placeholder="Endereço" required>
+                    <button type="submit" class="btn-primary">Cadastrar Cliente</button>
+                </form>
+
+                <h3 style="margin-top: 30px;">Lista de Clientes Cadastrados</h3>
+                <table id="clientes-list" class="data-table">
+                    <thead>
+                        <tr><th>Nome</th><th>CPF/CNPJ</th><th>Endereço</th><th>Ações</th></tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                </table>
+            </section>
+            
+            <section id="cliente-detalhe-page" class="page">
+                <button class="btn-secondary" onclick="showPage('clientes')">
+                    <i class="fas fa-arrow-left"></i> Voltar para Clientes
+                </button>
+                
+                <h2 id="cliente-detalhe-nome">Detalhes do Cliente</h2>
+                <div class="cliente-info-grid">
+                    <div class="info-card">
+                        <h3>Dados Cadastrais</h3>
+                        <p>CPF/CNPJ: <span id="detalhe-cpfcnpj"></span></p>
+                        <p>Nome: <span id="detalhe-nome"></span></p>
+                        <p>Endereço: <span id="detalhe-endereco"></span></p>
+                        <button class="btn-secondary" onclick="alert('Funcionalidade de Edição a ser implementada.')">Editar Cadastro</button>
+                    </div>
+                    <div class="info-card">
+                        <h3>Últimas Compras</h3>
+                        <ul id="detalhe-ultimas-compras">
+                            </ul>
+                    </div>
+                    <div class="chart-area info-card" style="grid-column: 1 / -1;">
+                        <h3>Gráfico: Valores de Vendas do Último Ano</h3>
+                        <p id="cliente-grafico-info">Área para Mini Gráfico de Valores do Último Ano. (Simulado com texto).</p>
+                    </div>
+                </div>
+            </section>
+
+        </main>
     </div>
     
     <div id="itemModal" class="modal">
@@ -217,11 +294,18 @@
             <label for="modalNome">Nome do Item:</label>
             <input type="text" id="modalNome" required>
             
-            <label for="modalSetor">Setor:</label>
+            <label for="modalSetor">Setor (Apenas referência):</label>
             <input type="text" id="modalSetor" placeholder="Serralheria, Pintura, etc." required>
+
+            <label for="modalProfissionalId">Profissional/Mão de Obra (Define o Custo/Hora):</label>
+            <select id="modalProfissionalId" required>
+                <option value="">Selecione um Profissional</option>
+                </select>
             
-            <label for="modalProfissional">Profissional:</label>
-            <input type="text" id="modalProfissional" placeholder="Pleno, Sênior, etc." required>
+            <label for="modalMaquinarioId">Maquinário Associado (Opcional):</label>
+            <select id="modalMaquinarioId">
+                <option value="">Nenhum Maquinário</option>
+                </select>
             
             <label for="modalDependeMedidas">Depende de Medidas (Tempo variável por tamanho)?</label>
             <input type="checkbox" id="modalDependeMedidas" onchange="toggleTabelaTempo()">
@@ -302,633 +386,13 @@
                         <input type="number" step="0.1" id="modalEngSetup3" placeholder="Setup" value="0">
                         <input type="number" step="0.1" id="modalEngOperacao3" placeholder="Op." value="0">
                     </div>
-                    
                 </div>
             </div>
-            
             <input type="hidden" id="modalEditIndex">
             <button style="margin-top: 15px;" onclick="salvarItem()">Salvar Item</button>
         </div>
     </div>
-
-
-    <script>
-        /* ================================================= */
-        /* JAVASCRIPT (Lógica Dinâmica)                  */
-        /* ================================================= */
-
-        // Banco de Dados Dinâmico para os Itens de Roteiro
-        // >>> ESTE CONTEÚDO FOI ATUALIZADO COM OS DADOS JSON SALVOS <<<
-        let itensRoteiro = [
-            {
-              "id": "corte",
-              "nome": "Corte",
-              "setor": "Serralheria",
-              "profissional": "Operador de Máquina Pleno",
-              "dependeMedidas": true,
-              "dependeFlange": false,
-              "operacaoConjunto": false,
-              "tempos": [
-                { "min": 1, "max": 3.9, "setup": 2, "operacao": 1.5 },
-                { "min": 4, "max": 6, "setup": 4, "operacao": 4.5 },
-                { "min": 6.1, "max": 12, "setup": 5, "operacao": 6.5 }
-              ]
-            },
-            {
-              "id": "plasma",
-              "nome": "Plasma",
-              "setor": "Serralheria",
-              "profissional": "Operador de Plasma",
-              "dependeMedidas": true,
-              "dependeFlange": true,
-              "operacaoConjunto": false,
-              "temposFlang": [
-                { "min": 1, "max": 3.9, "setup": 5, "operacao": 5 },
-                { "min": 4, "max": 6, "setup": 5, "operacao": 7 },
-                { "min": 6.1, "max": 12, "setup": 5, "operacao": 10 }
-              ],
-              "temposEng": [
-                { "min": 1, "max": 3.9, "setup": 2, "operacao": 2 },
-                { "min": 4, "max": 6, "setup": 1, "operacao": 3 },
-                { "min": 6.1, "max": 12, "setup": 2, "operacao": 6 }
-              ]
-            },
-            {
-              "id": "emendas",
-              "nome": "Emendas",
-              "setor": "Serralheria",
-              "profissional": "Soldador Sênior",
-              "dependeMedidas": false,
-              "dependeFlange": false,
-              "operacaoConjunto": false,
-              "tempos": [
-                { "min": 1, "max": 12, "setup": 5, "operacao": 5 }
-              ]
-            },
-            {
-              "id": "soldagem_base",
-              "nome": "Soldagem Base",
-              "setor": "Solda",
-              "profissional": "Soldador Especializado",
-              "dependeMedidas": true,
-              "dependeFlange": true,
-              "operacaoConjunto": false,
-              "temposFlang": [
-                { "min": 1, "max": 3.9, "setup": 3, "operacao": 5 },
-                { "min": 4, "max": 6, "setup": 3, "operacao": 7 },
-                { "min": 6.1, "max": 12, "setup": 3, "operacao": 10 }
-              ],
-              "temposEng": [
-                { "min": 1, "max": 3.9, "setup": 0, "operacao": 0 },
-                { "min": 4, "max": 6, "setup": 0, "operacao": 0 },
-                { "min": 6.1, "max": 12, "setup": 0, "operacao": 0 }
-              ]
-            },
-            {
-              "id": "acabamento",
-              "nome": "Acabamento",
-              "setor": "Acabamento",
-              "profissional": "Auxiliar",
-              "dependeMedidas": false,
-              "dependeFlange": false,
-              "operacaoConjunto": true,
-              "tempos": [
-                { "min": 1, "max": 12, "setup": 5, "operacao": 5 }
-              ]
-            }
-        ];
-        
-        // Roteiro de Produção: AGORA armazena apenas UMA INSTÂNCIA para cada ID base.
-        // O fatorTempo será o multiplicador.
-        let roteiroProducao = [];
-
-        // IDs dos itens que devem ser adicionados automaticamente se for Flangeado
-        const ITENS_AUTO_FLANG = ['soldagem_base', 'acabamento'];
-
-
-        // ===================================
-        // FUNÇÕES DE TEMPO E UTILIDADE
-        // ===================================
-
-        /**
-         * Formata o tempo total em minutos para 'X minutos e Y segundos'.
-         */
-        function formatarTempo(totalMinutos) {
-            if (totalMinutos === 0) return '0 min e 0 seg';
-            const minutos = Math.floor(totalMinutos);
-            // Arredonda para 1 casa decimal antes de calcular segundos para maior precisão
-            const totalMinutosArredondado = Math.round(totalMinutos * 10) / 10; 
-            const segundos = Math.round((totalMinutosArredondado - minutos) * 60);
-            return `${minutos} min e ${segundos} seg`;
-        }
-        
-        /**
-         * Encontra o item base na array itensRoteiro pelo ID.
-         */
-        function obterItemBasePorId(id) {
-            return itensRoteiro.find(item => item.id === id);
-        }
-
-        /**
-         * Encontra o tempo de Setup e Operação para um item e tamanho de poste.
-         * Aplica o fator de tempo da instância do roteiro.
-         */
-        function obterTempoItem(item, tamanho, tipoFlange = 'flang', fatorTempo = 1.0) {
-            let tabelas = item.tempos;
-            
-            // 1. Define a tabela de tempos correta (Flange/Engastado)
-            if (item.dependeFlange) {
-                tabelas = (tipoFlange === 'flang') ? item.temposFlang : item.temposEng;
-            } else if (!item.dependeMedidas && item.tempos) {
-                // Item Fixo 
-                const tempoFixo = item.tempos[0];
-                return { 
-                    setup: tempoFixo.setup * fatorTempo, 
-                    operacao: tempoFixo.operacao * fatorTempo, 
-                    range: 'Fixo' 
-                };
-            }
-
-            if (!tabelas || tabelas.length === 0) return { setup: 0, operacao: 0, range: 'N/A' };
-
-            // 2. Busca na tabela de tempos a faixa de tamanho correta
-            let tempoBase = { setup: 0, operacao: 0, range: 'Fora da Faixa' };
-            for (const t of tabelas) {
-                if (tamanho >= t.min && tamanho <= t.max) {
-                    tempoBase = { setup: t.setup, operacao: t.operacao, range: `${t.min}m a ${t.max}m` };
-                    break;
-                }
-            }
-
-            // 3. Aplica o Fator de Tempo
-            return {
-                setup: tempoBase.setup * fatorTempo,
-                operacao: tempoBase.operacao * fatorTempo,
-                range: tempoBase.range
-            };
-        }
-        
-        // ===================================
-        // FUNÇÕES DE RENDERIZAÇÃO E DOM
-        // ===================================
-
-        /**
-         * Renderiza a lista de itens customizáveis/base de dados.
-         */
-        function renderizarItensDisponiveis() {
-            const container = document.getElementById('itensDisponiveis');
-            container.innerHTML = '';
-            
-            itensRoteiro.forEach((item, index) => {
-                const itemDiv = document.createElement('div');
-                itemDiv.className = 'item-config';
-                
-                // Texto de Configuração
-                let configText = item.dependeMedidas ? 'Tempo Variável' : 'Tempo Fixo';
-                if (item.dependeFlange) configText += ' | Flange/Eng';
-                if (item.operacaoConjunto) configText += ' | Op. Conjunto';
-
-                itemDiv.innerHTML = `
-                    <div>
-                        <strong>${item.nome}</strong> 
-                        <span class="tempo-info">(${item.setor} | ${item.profissional})</span>
-                    </div>
-                    <div>${configText}</div>
-                    <div>${item.dependeMedidas ? 'Verificar cálculo' : 'Tempo Base Definido'}</div>
-                    <div>
-                        <button class="btn-editar" onclick="abrirModalEdicao(${index})">Editar</button>
-                        <button class="btn-adicionar" onclick="adicionarAoRoteiro(null, ${index}, false)">Adicionar</button>
-                        ${!['corte', 'plasma', 'emendas', 'soldagem_base', 'acabamento'].includes(item.id) ? `<button class="btn-remover" onclick="removerItemBase(${index})">Remover</button>` : ''}
-                    </div>
-                `;
-                container.appendChild(itemDiv);
-            });
-        }
-        
-        /**
-         * Renderiza o roteiro de produção atual e chama o cálculo.
-         */
-        function renderizarRoteiro() {
-            const container = document.getElementById('roteiroAtual');
-            const tamanhoPoste = parseFloat(document.getElementById('tamanhoPoste').value);
-            const tipoFlange = document.getElementById('tipoFlange').value;
-            container.innerHTML = '';
-            
-            // =========================================================================
-            // >>> LÓGICA DE AUTO-INCLUSÃO E REMOÇÃO DE ITENS OBRIGATÓRIOS PARA FLANGEADO
-            // =========================================================================
-            if (tipoFlange === 'flang') {
-                ITENS_AUTO_FLANG.forEach(itemId => {
-                    // Verifica se o item já existe no roteiro
-                    const existe = roteiroProducao.some(item => item.baseId === itemId && item.isAutoAdded);
-                    if (!existe) {
-                        // Se não existir, adiciona automaticamente (fator 1.0)
-                        const baseItemIndex = itensRoteiro.findIndex(i => i.id === itemId);
-                        if (baseItemIndex !== -1) {
-                            // O 3º argumento marca como auto-adicionado
-                            adicionarAoRoteiro(null, baseItemIndex, true); 
-                        }
-                    }
-                });
-            } else { // tipoFlange === 'eng'
-                // Remove todos os itens que foram adicionados automaticamente
-                roteiroProducao = roteiroProducao.filter(item => !(ITENS_AUTO_FLANG.includes(item.baseId) && item.isAutoAdded));
-            }
-            // =========================================================================
-
-
-            if (roteiroProducao.length === 0) {
-                 container.innerHTML = '<p style="color: #6c757d;">Nenhum item adicionado ao roteiro.</p>';
-                 calcularTempoTotal(); // Garante que o resultado zere
-                 return;
-            }
-            
-            roteiroProducao.forEach((roteiroItem, index) => {
-                const baseItem = obterItemBasePorId(roteiroItem.baseId);
-                if (!baseItem) return;
-                
-                // Passa o fator de tempo da instância para o cálculo
-                const fatorTempo = roteiroItem.fatorTempo || 1.0;
-                const tempo = obterTempoItem(baseItem, tamanhoPoste, tipoFlange, fatorTempo);
-                
-                // Define as classes de estilo
-                let classes = roteiroItem.isAutoAdded ? 'auto-added' : '';
-                // Adiciona a classe 'multiplicado' se o fator for maior que 1.0
-                if (fatorTempo > 1.0) classes += ' multiplicado';
-                
-                const itemDiv = document.createElement('div');
-                itemDiv.className = `roteiro-item ${classes.trim()}`;
-                
-                let detalhesTempo;
-                if (tempo.range === 'Fora da Faixa' && baseItem.dependeMedidas) {
-                    detalhesTempo = '<span style="color: red;">Tamanho fora das faixas de tempo!</span>';
-                } else if (tempo.setup === 0 && tempo.operacao === 0) {
-                     detalhesTempo = `<span style="color: orange;">Não aplicável (Tempo: 0)</span>`;
-                } else {
-                    detalhesTempo = `Setup: ${formatarTempo(tempo.setup)} | Op.: ${formatarTempo(tempo.operacao)}`;
-                }
-                
-                const autoAddedLabel = roteiroItem.isAutoAdded ? '<span style="color: #007bff; font-weight: bold;">(Auto)</span>' : '';
-                // Exibe o fator de tempo, se for maior que 1.0
-                const fatorLabel = fatorTempo > 1.0 ? `<span style="color: #ff9800; font-weight: bold;">(x${fatorTempo.toFixed(1).replace('.0', '')})</span>` : '';
-                const operacaoConjuntoLabel = baseItem.operacaoConjunto ? '<span style="color: darkorange;">(Op. Conjunto)</span>' : '';
-                
-                itemDiv.innerHTML = `
-                    <div>
-                        <strong>${baseItem.nome}</strong> ${fatorLabel} ${autoAddedLabel} ${operacaoConjuntoLabel}
-                        <span class="tempo-info">(${baseItem.setor} | ${baseItem.profissional})</span>
-                    </div>
-                    <div>${detalhesTempo}</div>
-                    <div></div> 
-                    <div>
-                        <button class="btn-remover" onclick="removerDoRoteiro(${index})">Remover</button>
-                    </div>
-                `;
-                container.appendChild(itemDiv);
-            });
-            
-            calcularTempoTotal();
-        }
-
-        // ===================================
-        // FUNÇÕES DE MANIPULAÇÃO DO ROTEIRO
-        // ===================================
-
-        /**
-         * Adiciona ou multiplica o tempo de um item no roteiro de produção.
-         * @param {Event | null} event - Evento de clique (null para auto-adicionado).
-         * @param {number} index - Índice do item na base de dados (itensRoteiro).
-         * @param {boolean} isAutoAdded - True se for adicionado automaticamente (Flangeado).
-         */
-        function adicionarAoRoteiro(event, index, isAutoAdded = false) {
-            const itemBase = itensRoteiro[index];
-            
-            // Tenta encontrar a instância do item no roteiro
-            // Para itens manuais: o critério é o baseId e NÃO ser auto-adicionado.
-            let instanciaExistente = roteiroProducao.find(item => item.baseId === itemBase.id && item.isAutoAdded === isAutoAdded);
-
-            if (instanciaExistente) {
-                // Se a instância já existe:
-                
-                // 1. Não permite dobrar itens adicionados automaticamente, exceto se for um clique manual
-                if (instanciaExistente.isAutoAdded && event) {
-                    alert(`O item "${itemBase.nome}" foi adicionado automaticamente. Remova-o e adicione manualmente se precisar dobrar o tempo.`);
-                    return;
-                }
-                
-                // 2. Incrementa o fator de tempo (dobra, triplica, etc.)
-                instanciaExistente.fatorTempo = (instanciaExistente.fatorTempo || 1.0) + 1.0;
-                
-                // Exibe uma notificação para o usuário
-                alert(`Tempo do item "${itemBase.nome}" foi multiplicado por ${instanciaExistente.fatorTempo.toFixed(0)}.`);
-
-            } else {
-                // Se a instância NÃO existe: Adiciona uma nova instância
-                const novaInstancia = {
-                    baseId: itemBase.id,
-                    isAutoAdded: isAutoAdded,
-                    fatorTempo: 1.0 // Começa com fator 1.0
-                };
-                roteiroProducao.push(novaInstancia);
-            }
-            
-            renderizarRoteiro();
-        }
-
-        /**
-         * Remove um item do roteiro de produção.
-         */
-        function removerDoRoteiro(index) {
-            roteiroProducao.splice(index, 1);
-            renderizarRoteiro();
-        }
-
-        /**
-         * Remove um item da base de dados (itens customizados).
-         */
-        function removerItemBase(index) {
-            if (confirm(`Tem certeza que deseja remover o item "${itensRoteiro[index].nome}" da base?`)) {
-                 const idRemovido = itensRoteiro[index].id;
-                 itensRoteiro.splice(index, 1);
-                 
-                 // Remove o item da base de dados de todos os roteiros
-                 roteiroProducao = roteiroProducao.filter(item => item.baseId !== idRemovido);
-                 
-                 renderizarItensDisponiveis();
-                 renderizarRoteiro();
-            }
-        }
-        
-        // ===================================
-        // FUNÇÕES DE CÁLCULO FINAL (Mantidas)
-        // ===================================
-
-        /**
-         * Calcula e exibe o tempo total (Setup e Operação) do roteiro atual.
-         */
-        function calcularTempoTotal() {
-            const tamanhoPoste = parseFloat(document.getElementById('tamanhoPoste').value);
-            const tipoFlange = document.getElementById('tipoFlange').value;
-            const resultadoDiv = document.getElementById('resultado');
-
-            let tempoTotalSetup = 0;
-            let tempoTotalOperacao = 0;
-            
-            // Validação do tamanho
-            if (isNaN(tamanhoPoste) || tamanhoPoste < 1 || tamanhoPoste > 12) {
-                resultadoDiv.innerHTML = `
-                    <h2>Tempo Total de Mão de Obra</h2>
-                    <p style="color: red;">Por favor, insira um tamanho de poste válido (entre 1 e 12 metros) para calcular.</p>
-                `;
-                return;
-            }
-
-            roteiroProducao.forEach(roteiroItem => {
-                const baseItem = obterItemBasePorId(roteiroItem.baseId);
-                if (!baseItem) return;
-                
-                const fatorTempo = roteiroItem.fatorTempo || 1.0;
-                // Pega o tempo já com o fator de multiplicação aplicado
-                const tempo = obterTempoItem(baseItem, tamanhoPoste, tipoFlange, fatorTempo);
-                
-                // Soma apenas o Setup se NÃO for Operação em Conjunto
-                if (!baseItem.operacaoConjunto) {
-                    tempoTotalSetup += tempo.setup;
-                }
-                
-                // SEMPRE soma o tempo de Operação
-                tempoTotalOperacao += tempo.operacao;
-            });
-            
-            const tempoTotalGeral = tempoTotalSetup + tempoTotalOperacao;
-
-            resultadoDiv.innerHTML = `
-                <h2>Tempo Total de Mão de Obra</h2>
-                <p><strong>TEMPO TOTAL DE SETUP:</strong> <span class="detalhe-tempo">${formatarTempo(tempoTotalSetup)}</span> (Setup não somado para itens em 'Op. Conjunto')</p>
-                <p><strong>TEMPO TOTAL DE OPERAÇÃO:</strong> <span class="detalhe-tempo">${formatarTempo(tempoTotalOperacao)}</span></p>
-                <h3 style="color: green;">TEMPO TOTAL GERAL (Setup + Operação): ${formatarTempo(tempoTotalGeral)}</h3>
-            `;
-        }
-
-        // ===================================
-        // FUNÇÕES DE MODAL (EDIÇÃO/ADIÇÃO) - Mantidas
-        // ===================================
-        
-        // Zera todos os campos de tempo para evitar sujeira no modal
-        function limparCamposTempoModal() {
-            // Campos Simples
-            ['modalSetup1', 'modalOperacao1', 'modalSetup2', 'modalOperacao2', 'modalSetup3', 'modalOperacao3'].forEach(id => {
-                document.getElementById(id).value = 0;
-            });
-            // Campos Dual (Flang/Eng)
-            ['modalFlangSetup1', 'modalFlangOperacao1', 'modalFlangSetup2', 'modalFlangOperacao2', 'modalFlangSetup3', 'modalFlangOperacao3',
-             'modalEngSetup1', 'modalEngOperacao1', 'modalEngSetup2', 'modalEngOperacao2', 'modalEngSetup3', 'modalEngOperacao3'].forEach(id => {
-                document.getElementById(id).value = 0;
-            });
-        }
-        
-        /**
-         * Abre o modal no modo Adicionar Novo Item.
-         */
-        function abrirModalAdicionar() {
-            document.getElementById('modalNome').value = '';
-            document.getElementById('modalSetor').value = '';
-            document.getElementById('modalProfissional').value = '';
-            document.getElementById('modalDependeMedidas').checked = true;
-            document.getElementById('modalDependeFlange').checked = false;
-            document.getElementById('modalOperacaoConjunto').checked = false;
-            document.getElementById('modalEditIndex').value = -1; // Sinaliza novo item
-            limparCamposTempoModal();
-            toggleTabelaTempo(); 
-            document.getElementById('itemModal').style.display = 'block';
-        }
-
-        /**
-         * Abre o modal no modo Edição de Item existente.
-         */
-        function abrirModalEdicao(index) {
-            const item = itensRoteiro[index];
-            document.getElementById('modalNome').value = item.nome;
-            document.getElementById('modalSetor').value = item.setor;
-            document.getElementById('modalProfissional').value = item.profissional;
-            document.getElementById('modalDependeMedidas').checked = item.dependeMedidas;
-            document.getElementById('modalDependeFlange').checked = item.dependeFlange;
-            document.getElementById('modalOperacaoConjunto').checked = item.operacaoConjunto;
-            document.getElementById('modalEditIndex').value = index;
-
-            limparCamposTempoModal();
-            toggleTabelaTempo(); 
-            
-            // Popula os campos de tempo baseados nas configurações
-            if (item.dependeFlange) {
-                // Tempos Flangeados
-                document.getElementById('modalFlangSetup1').value = item.temposFlang[0]?.setup || 0;
-                document.getElementById('modalFlangOperacao1').value = item.temposFlang[0]?.operacao || 0;
-                document.getElementById('modalFlangSetup2').value = item.temposFlang[1]?.setup || 0;
-                document.getElementById('modalFlangOperacao2').value = item.temposFlang[1]?.operacao || 0;
-                document.getElementById('modalFlangSetup3').value = item.temposFlang[2]?.setup || 0;
-                document.getElementById('modalFlangOperacao3').value = item.temposFlang[2]?.operacao || 0;
-                // Tempos Engastados
-                document.getElementById('modalEngSetup1').value = item.temposEng[0]?.setup || 0;
-                document.getElementById('modalEngOperacao1').value = item.temposEng[0]?.operacao || 0;
-                document.getElementById('modalEngSetup2').value = item.temposEng[1]?.setup || 0;
-                document.getElementById('modalEngOperacao2').value = item.temposEng[1]?.operacao || 0;
-                document.getElementById('modalEngSetup3').value = item.temposEng[2]?.setup || 0;
-                document.getElementById('modalEngOperacao3').value = item.temposEng[2]?.operacao || 0;
-            } else {
-                // Tempos Simples (Variável ou Fixo)
-                if (item.dependeMedidas) {
-                    // Variável por faixa (usa tempos[0], [1], [2])
-                    document.getElementById('modalSetup1').value = item.tempos[0]?.setup || 0;
-                    document.getElementById('modalOperacao1').value = item.tempos[0]?.operacao || 0;
-                    document.getElementById('modalSetup2').value = item.tempos[1]?.setup || 0;
-                    document.getElementById('modalOperacao2').value = item.tempos[1]?.operacao || 0;
-                    document.getElementById('modalSetup3').value = item.tempos[2]?.setup || 0;
-                    document.getElementById('modalOperacao3').value = item.tempos[2]?.operacao || 0;
-                } else {
-                    // Fixo (usa apenas tempos[0])
-                    document.getElementById('modalSetup1').value = item.tempos[0]?.setup || 0;
-                    document.getElementById('modalOperacao1').value = item.tempos[0]?.operacao || 0;
-                }
-            }
-
-            document.getElementById('itemModal').style.display = 'block';
-        }
-
-        /**
-         * Alterna a visualização das tabelas de tempo no modal.
-         */
-        function toggleTabelaTempo() {
-            const dependeMedidas = document.getElementById('modalDependeMedidas').checked;
-            const dependeFlange = document.getElementById('modalDependeFlange').checked;
-            const tabelaSimples = document.getElementById('tabelaTempoSimples');
-            const tabelaDual = document.getElementById('tabelaTempoDual');
-            const row4a6 = document.getElementById('row4a6');
-            const row6a12 = document.getElementById('row6a12');
-            const tabelaTempoModal = document.getElementById('tabelaTempoModal');
-
-            tabelaTempoModal.style.display = 'block'; // Sempre mostra a seção de tempo, mesmo que zerada
-
-            if (dependeFlange) {
-                // Se depende do Flange/Engastado, usa a tabela dual
-                tabelaDual.style.display = 'block';
-                tabelaSimples.style.display = 'none';
-            } else {
-                // Se não depende do Flange/Engastado, usa a tabela simples
-                tabelaDual.style.display = 'none';
-                tabelaSimples.style.display = 'block';
-
-                if (dependeMedidas) {
-                    // Se depende de medidas (tempo variável por faixa)
-                    row4a6.style.display = 'grid';
-                    row6a12.style.display = 'grid';
-                    document.querySelector('#tabelaTempoSimples .tempo-grid span').textContent = '1 a 3.9m:';
-                } else {
-                    // Se o tempo é fixo, mostra apenas a primeira linha
-                    row4a6.style.display = 'none';
-                    row6a12.style.display = 'none';
-                    document.querySelector('#tabelaTempoSimples .tempo-grid span').textContent = 'Tempo Fixo:';
-                }
-            }
-        }
-
-
-        /**
-         * Fecha o modal de edição/adição.
-         */
-        function fecharModal() {
-            document.getElementById('itemModal').style.display = 'none';
-        }
-        
-        /**
-         * Gera um ID simples para novos itens.
-         */
-        function gerarNovoId(nome) {
-            return nome.toLowerCase().replace(/[^a-z0-9]/g, '_');
-        }
-
-        /**
-         * Salva o item (novo ou editado) na base de dados.
-         */
-        function salvarItem() {
-            const index = parseInt(document.getElementById('modalEditIndex').value);
-            const nome = document.getElementById('modalNome').value.trim();
-            const setor = document.getElementById('modalSetor').value.trim();
-            const profissional = document.getElementById('modalProfissional').value.trim();
-            const dependeMedidas = document.getElementById('modalDependeMedidas').checked;
-            const dependeFlange = document.getElementById('modalDependeFlange').checked;
-            const operacaoConjunto = document.getElementById('modalOperacaoConjunto').checked;
-
-            if (!nome || !setor || !profissional) {
-                alert("Por favor, preencha o Nome, Setor e Profissional.");
-                return;
-            }
-
-            let novoItem = {
-                id: (index === -1) ? gerarNovoId(nome) : itensRoteiro[index].id,
-                nome: nome,
-                setor: setor,
-                profissional: profissional,
-                dependeMedidas: dependeMedidas,
-                dependeFlange: dependeFlange,
-                operacaoConjunto: operacaoConjunto,
-            };
-            
-            // Lógica para salvar os tempos
-            if (dependeFlange) {
-                novoItem.temposFlang = [
-                    { min: 1, max: 3.9, setup: parseFloat(document.getElementById('modalFlangSetup1').value), operacao: parseFloat(document.getElementById('modalFlangOperacao1').value) },
-                    { min: 4, max: 6, setup: parseFloat(document.getElementById('modalFlangSetup2').value), operacao: parseFloat(document.getElementById('modalFlangOperacao2').value) },
-                    { min: 6.1, max: 12, setup: parseFloat(document.getElementById('modalFlangSetup3').value), operacao: parseFloat(document.getElementById('modalFlangOperacao3').value) }
-                ];
-                novoItem.temposEng = [
-                    { min: 1, max: 3.9, setup: parseFloat(document.getElementById('modalEngSetup1').value), operacao: parseFloat(document.getElementById('modalEngOperacao1').value) },
-                    { min: 4, max: 6, setup: parseFloat(document.getElementById('modalEngSetup2').value), operacao: parseFloat(document.getElementById('modalEngOperacao2').value) },
-                    { min: 6.1, max: 12, setup: parseFloat(document.getElementById('modalEngSetup3').value), operacao: parseFloat(document.getElementById('modalEngOperacao3').value) }
-                ];
-                delete novoItem.tempos; // Remove o campo simples, se existir
-            } else if (dependeMedidas) {
-                // Tempo Variável Simples
-                novoItem.tempos = [
-                    { min: 1, max: 3.9, setup: parseFloat(document.getElementById('modalSetup1').value), operacao: parseFloat(document.getElementById('modalOperacao1').value) },
-                    { min: 4, max: 6, setup: parseFloat(document.getElementById('modalSetup2').value), operacao: parseFloat(document.getElementById('modalOperacao2').value) },
-                    { min: 6.1, max: 12, setup: parseFloat(document.getElementById('modalSetup3').value), operacao: parseFloat(document.getElementById('modalOperacao3').value) }
-                ];
-                delete novoItem.temposFlang; delete novoItem.temposEng; 
-            } else {
-                // Tempo Fixo Simples (usa a primeira faixa com range 1 a 12)
-                novoItem.tempos = [
-                    { min: 1, max: 12, setup: parseFloat(document.getElementById('modalSetup1').value), operacao: parseFloat(document.getElementById('modalOperacao1').value) }
-                ];
-                delete novoItem.temposFlang; delete novoItem.temposEng;
-            }
-
-            if (index === -1) {
-                // Novo item
-                if (itensRoteiro.some(item => item.id === novoItem.id)) {
-                    alert('Já existe um item com um nome similar. Por favor, escolha um nome mais exclusivo.');
-                    return;
-                }
-                itensRoteiro.push(novoItem);
-            } else {
-                // Edição de item existente
-                itensRoteiro[index] = novoItem;
-            }
-
-            fecharModal();
-            renderizarItensDisponiveis();
-            renderizarRoteiro(); // Recalcula o roteiro caso os tempos tenham mudado
-        }
-
-
-        // ===================================
-        // INICIALIZAÇÃO
-        // ===================================
-        document.addEventListener('DOMContentLoaded', () => {
-            renderizarItensDisponiveis();
-            renderizarRoteiro(); 
-        });
-
-    </script>
+    
+    <script src="script.js"></script>
 </body>
 </html>
