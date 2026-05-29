@@ -1,398 +1,83 @@
+<!-- index.html -->
 <!DOCTYPE html>
-<html lang="pt-br">
+<html lang="pt-BR">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mini ERP: Produção e Vendas</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Criador de Listas</title>
+
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <div class="sidebar">
-        <h2>Mini ERP</h2>
-        <nav>
-            <a href="#dashboard" data-page="dashboard" class="nav-link active"><i class="fas fa-tachometer-alt"></i> Dashboard</a>
-            <a href="#estoque" data-page="estoque" class="nav-link"><i class="fas fa-box"></i> Materiais</a>
-            <a href="#produtos" data-page="produtos" class="nav-link"><i class="fas fa-cube"></i> Produtos</a>
-            <a href="#roteiros" data-page="roteiros" class="nav-link"><i class="fas fa-route"></i> Roteiros</a>
-            <a href="#vendas" data-page="vendas" class="nav-link"><i class="fas fa-shopping-cart"></i> Vendas</a>
-            <a href="#clientes" data-page="clientes" class="nav-link"><i class="fas fa-users"></i> Clientes</a>
-        </nav>
-    </div>
 
-    <div class="main-content">
-        <header>
-            <h1 id="page-title">Dashboard Principal</h1>
-            <div class="user-info">Bem-vindo(a), Usuário(a)</div>
-        </header>
-        
-        <main class="content-wrapper">
-            
-            <section id="dashboard-page" class="page active-page">
-                <div class="dashboard-grid">
-                    <div class="data-card"><i class="fas fa-dollar-sign icon"></i><p class="card-title">Faturamento Total</p><p class="card-value">R$ <span id="faturamento-value">0,00</span></p></div>
-                    <div class="data-card"><i class="fas fa-clock icon"></i><p class="card-title">Clientes Cadastrados</p><p class="card-value"><span id="clientes-value">0</span></p></div>
-                    <div class="data-card"><i class="fas fa-warehouse icon"></i><p class="card-title">Produtos Finalizados</p><p class="card-value"><span id="produtos-cadastrados-value">0</span></p></div>
-                    <div class="chart-area" id="chart-vendas"><h2>Vendas por Período</h2><p>Área para Gráfico de Vendas.</p></div>
-                </div>
-            </section>
-            
-            <section id="estoque-page" class="page">
-                <h2>Cadastro de Materiais (Custo Fracionável)</h2>
-                <form id="material-form" class="form-grid">
-                    <input type="text" id="material-nome" placeholder="Nome do Material (Ex: Litro de Tinta)" required>
-                    <input type="number" id="material-custo" placeholder="Custo Unitário Base (R$)" step="0.01" required>
-                    <input type="number" id="material-qtd" placeholder="Qtd. (N/A)" value="0" disabled> 
-                    <button type="submit" class="btn-primary">Cadastrar/Atualizar Material</button>
-                </form>
-                <h3 style="margin-top: 30px;">Lista de Materiais Cadastrados</h3>
-                <table id="materiais-list" class="data-table">
-                    <thead>
-                        <tr><th>ID</th><th>Nome</th><th>Custo Base (R$)</th><th>Ações</th></tr>
-                    </thead>
-                    <tbody>
-                    </tbody>
-                </table>
-            </section>
-            
-            <section id="produtos-page" class="page">
-                <h2>Criação de Produto Final</h2>
-                <form id="produto-form" class="form-grid">
-                    <input type="text" id="produto-nome" placeholder="Nome do Produto (Ex: Poste Curvo)" required>
-                    <input type="text" id="produto-sku" placeholder="SKU (Ex: P123)" required>
-                    <input type="number" id="produto-preco" placeholder="Preço de Venda (R$)" step="0.01" required>
-                    <div class="custos-info">
-                        Custo Mat. Prima: R$ <span id="custo-materia-prima">0,00</span> | Custo Total (Estimado): R$ <span id="custo-total-produto">0,00</span>
-                    </div>
-                    <button type="submit" class="btn-primary">Salvar Produto</button>
-                    <input type="hidden" id="produto-id-edicao">
-                </form>
+  <div class="container">
 
-                <div class="add-material-to-product">
-                    <h3>Adicionar Material na Composição</h3>
-                    <div class="add-material-controls">
-                        <select id="select-material" required>
-                            <option value="">Selecione um Material</option>
-                        </select>
-                        <input type="number" id="qtd-material" placeholder="Qtd. Usada (Ex: 0.5, 2)" step="0.01" min="0" required>
-                        <button class="btn-secondary" onclick="addMaterialToProduct()">Adicionar</button>
-                    </div>
-                    <div id="materiais-compo-list" class="composicao-list">
-                        <p style="color:#7f8c8d;">Nenhum material adicionado.</p>
-                    </div>
-                </div>
+    <header class="topo">
+      <h1>Criador de Listas</h1>
+      <p>Crie colunas e adicione dados em linhas.</p>
+    </header>
 
-                <h3 style="margin-top: 30px;">Lista de Produtos Cadastrados</h3>
-                <table id="produtos-list" class="data-table">
-                    <thead>
-                        <tr><th>SKU</th><th>Nome</th><th>Custo Total (R$)</th><th>Preço Venda (R$)</th><th>Ações</th></tr>
-                    </thead>
-                    <tbody>
-                    </tbody>
-                </table>
-            </section>
-            
-            <section id="roteiros-page" class="page">
-                <div class="alert-prod" id="product-alert">
-                    <i class="fas fa-exclamation-triangle"></i> ATENÇÃO: Selecione um Produto do Mini ERP (Funcionalidade Externa) para Habilitar.
-                </div>
-                
-                <div id="main-content" style="display:none;">
-                    <div id="control-nav">
-                        <div class="nav-tab active" data-page="roteiro">
-                            <i class="fas fa-route"></i> Roteiro Dinâmico
-                        </div>
-                        <div class="nav-tab" data-page="maquinarios">
-                            <i class="fas fa-industry"></i> Maquinários
-                        </div>
-                        <div class="nav-tab" data-page="funcionarios">
-                            <i class="fas fa-users"></i> Funcionários (M.O.)
-                        </div>
-                    </div>
+    <!-- Criar colunas -->
+    <section class="card">
+      <h2>Nova Coluna</h2>
 
-                    <div id="roteiro-page" class="internal-page active">
-                        
-                        <div class="input-group">
-                            <label for="tamanhoPoste">Tamanho do Poste (metros):</label>
-                            <input type="number" id="tamanhoPoste" step="0.1" min="1" max="12" placeholder="Ex: 5.5" onchange="renderizarRoteiro()" onkeyup="renderizarRoteiro()">
-                        </div>
-
-                        <div class="input-group">
-                            <label for="tipoFlange">Tipo de Poste para Plasma:</label>
-                            <select id="tipoFlange" onchange="renderizarRoteiro()">
-                                <option value="flang">Flangeado (Flang)</option>
-                                <option value="eng">Engastado (Eng)</option>
-                            </select>
-                            <p style="font-size: 0.9em; color: var(--primary-color); margin-top: 8px;">* Selecionar **Flangeado** adiciona automaticamente os itens **Soldagem Base** e **Acabamento** ao roteiro.</p>
-                        </div>
-                        
-                        <h2>Itens de Roteiro Customizáveis (Base de Dados)</h2>
-                        <div id="itensDisponiveis">
-                        </div>
-
-                        <button class="btn-adicionar" onclick="abrirModalAdicionar()">+ Adicionar Novo Item</button>
-
-                        <h2>Roteiro Atual do Produto</h2>
-                        <div id="roteiroAtual">
-                            <p style="color: #6c757d;">Selecione os itens acima e clique em "Adicionar ao Roteiro".</p>
-                        </div>
-
-                        <div class="resultado" id="resultado">
-                            <h2>Tempo e Custo Total de Mão de Obra</h2>
-                            <p>Selecione um tamanho de poste e adicione itens ao roteiro.</p>
-                        </div>
-                    </div>
-
-                    <div id="maquinarios-page" class="internal-page">
-                        <h2>Adicionar Novo Maquinário</h2>
-                        <form id="maquinario-form">
-                            <div class="form-row">
-                                <div>
-                                    <label for="maquinarioNome">Nome do Maquinário:</label>
-                                    <input type="text" id="maquinarioNome" required>
-                                </div>
-                                <div>
-                                    <label for="maquinarioSetor">Setor:</label>
-                                    <select id="maquinarioSetor" required>
-                                        <option value="">Selecione um Setor</option>
-                                        <option value="Almoxarifado">Almoxarifado</option>
-                                        <option value="Calderaria">Calderaria</option>
-                                        <option value="Expedição">Expedição</option>
-                                        <option value="Montagem">Montagem</option>
-                                        <option value="Pintura">Pintura</option>
-                                        <option value="Recebimento">Recebimento</option>
-                                        <option value="Serralheria">Serralheria</option>
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="form-row">
-                                <div style="grid-column: span 2;">
-                                    <label for="maquinarioProfissionalId">Profissional Habilitado (Principal):</label>
-                                    <select id="maquinarioProfissionalId" required>
-                                        <option value="">Selecione um Funcionário</option>
-                                        </select>
-                                </div>
-                            </div>
-                            <button type="submit" class="btn-primary">Salvar Maquinário</button>
-                        </form>
-
-                        <h2 style="margin-top: 30px;">Maquinários Cadastrados</h2>
-                        <table class="data-table">
-                            <thead>
-                                <tr><th>Nome</th><th>Setor</th><th>Profissional Principal</th><th>Ações</th></tr>
-                            </thead>
-                            <tbody id="maquinarios-list">
-                                </tbody>
-                        </table>
-                    </div>
-
-                    <div id="funcionarios-page" class="internal-page">
-                        <h2>Adicionar Novo Funcionário (Mão de Obra)</h2>
-                        <form id="funcionario-form">
-                            <div class="form-row">
-                                <div>
-                                    <label for="funcionarioNome">Nome/Descrição da Função:</label>
-                                    <input type="text" id="funcionarioNome" required>
-                                </div>
-                                <div>
-                                    <label for="funcionarioSalario">Salário Mensal (R$):</label>
-                                    <input type="number" id="funcionarioSalario" step="0.01" min="0" required oninput="calcularCustoHora()">
-                                    <span id="custoHoraDisplay" class="salary-info">Custo/Hora: R$ 0,00 (Salário / 220h)</span>
-                                </div>
-                            </div>
-                            <button type="submit" class="btn-primary">Salvar Funcionário</button>
-                        </form>
-
-                        <h2 style="margin-top: 30px;">Funcionários Cadastrados</h2>
-                        <table class="data-table">
-                            <thead>
-                                <tr><th>Nome</th><th>Salário Mensal</th><th>Custo/Hora</th><th>Ações</th></tr>
-                            </thead>
-                            <tbody id="funcionarios-list">
-                                </tbody>
-                        </table>
-                    </div>
-                </div>
-            </section>
-            <section id="vendas-page" class="page">
-                <h2>Registro de Vendas</h2>
-                <form id="venda-form" class="form-grid">
-                    <input type="text" id="venda-cliente" placeholder="Buscar Cliente (Nome/CPF/CNPJ)" list="cliente-datalist" required>
-                    <datalist id="cliente-datalist"></datalist>
-                    <select id="venda-produto" required>
-                        <option value="">Selecione um Produto</option>
-                    </select>
-                    <input type="number" id="venda-quantidade" placeholder="Quantidade" min="1" required>
-                    <input type="date" id="venda-data" required>
-                    <button type="submit" class="btn-primary" id="btn-registrar-venda" disabled>Registrar Venda</button>
-                    <p style="grid-column: span 2; font-size: 0.9em;">Cliente Selecionado: <span id="cliente-selecionado-display" style="font-weight: bold;">Nenhum</span></p>
-                </form>
-
-                <h3 style="margin-top: 30px;">Histórico de Vendas</h3>
-                <table id="vendas-list" class="data-table">
-                    <thead>
-                        <tr><th>Data</th><th>Cliente</th><th>Produto</th><th>Qtd.</th><th>Preço Un.</th><th>Total (R$)</th></tr>
-                    </thead>
-                    <tbody>
-                    </tbody>
-                </table>
-            </section>
-            
-            <section id="clientes-page" class="page">
-                <h2>Cadastro de Clientes</h2>
-                <form id="cliente-form" class="form-grid">
-                    <input type="text" id="cliente-nome" placeholder="Nome Completo / Razão Social" required>
-                    <input type="text" id="cliente-cpfcnpj" placeholder="CPF ou CNPJ" required>
-                    <input type="text" id="cliente-endereco" placeholder="Endereço" required>
-                    <button type="submit" class="btn-primary">Cadastrar Cliente</button>
-                </form>
-
-                <h3 style="margin-top: 30px;">Lista de Clientes Cadastrados</h3>
-                <table id="clientes-list" class="data-table">
-                    <thead>
-                        <tr><th>Nome</th><th>CPF/CNPJ</th><th>Endereço</th><th>Ações</th></tr>
-                    </thead>
-                    <tbody>
-                    </tbody>
-                </table>
-            </section>
-            
-            <section id="cliente-detalhe-page" class="page">
-                <button class="btn-secondary" onclick="showPage('clientes')">
-                    <i class="fas fa-arrow-left"></i> Voltar para Clientes
-                </button>
-                
-                <h2 id="cliente-detalhe-nome">Detalhes do Cliente</h2>
-                <div class="cliente-info-grid">
-                    <div class="info-card">
-                        <h3>Dados Cadastrais</h3>
-                        <p>CPF/CNPJ: <span id="detalhe-cpfcnpj"></span></p>
-                        <p>Nome: <span id="detalhe-nome"></span></p>
-                        <p>Endereço: <span id="detalhe-endereco"></span></p>
-                        <button class="btn-secondary" onclick="alert('Funcionalidade de Edição a ser implementada.')">Editar Cadastro</button>
-                    </div>
-                    <div class="info-card">
-                        <h3>Últimas Compras</h3>
-                        <ul id="detalhe-ultimas-compras">
-                            </ul>
-                    </div>
-                    <div class="chart-area info-card" style="grid-column: 1 / -1;">
-                        <h3>Gráfico: Valores de Vendas do Último Ano</h3>
-                        <p id="cliente-grafico-info">Área para Mini Gráfico de Valores do Último Ano. (Simulado com texto).</p>
-                    </div>
-                </div>
-            </section>
-
-        </main>
-    </div>
-    
-    <div id="itemModal" class="modal">
-        <div class="modal-content">
-            <span class="close-btn" onclick="fecharModal()">&times;</span>
-            <h2>Editar/Adicionar Item</h2>
-            
-            <label for="modalNome">Nome do Item:</label>
-            <input type="text" id="modalNome" required>
-            
-            <label for="modalSetor">Setor (Apenas referência):</label>
-            <input type="text" id="modalSetor" placeholder="Serralheria, Pintura, etc." required>
-
-            <label for="modalProfissionalId">Profissional/Mão de Obra (Define o Custo/Hora):</label>
-            <select id="modalProfissionalId" required>
-                <option value="">Selecione um Profissional</option>
-                </select>
-            
-            <label for="modalMaquinarioId">Maquinário Associado (Opcional):</label>
-            <select id="modalMaquinarioId">
-                <option value="">Nenhum Maquinário</option>
-                </select>
-            
-            <label for="modalDependeMedidas">Depende de Medidas (Tempo variável por tamanho)?</label>
-            <input type="checkbox" id="modalDependeMedidas" onchange="toggleTabelaTempo()">
-            
-            <label for="modalDependeFlange">Depende de Flange/Engastado?</label>
-            <input type="checkbox" id="modalDependeFlange" onchange="toggleTabelaTempo()">
-            
-            <label for="modalOperacaoConjunto">Operação em Conjunto (Não somar Setup/Somar apenas Operação)?</label>
-            <input type="checkbox" id="modalOperacaoConjunto">
-            
-            <div id="tabelaTempoModal" class="tempo-section">
-                <div id="tabelaTempoSimples">
-                    <label class="tabela-header">Tabela de Tempo (minutos - Setup/Operação)</label>
-                    <div class="tempo-grid">
-                        <span>Faixa</span>
-                        <span>Setup</span>
-                        <span>Operação</span>
-                    </div>
-                    <div class="tempo-grid">
-                        <span>1 a 3.9m / Fixo:</span>
-                        <input type="number" step="0.1" id="modalSetup1" placeholder="Setup" value="0">
-                        <input type="number" step="0.1" id="modalOperacao1" placeholder="Op." value="0">
-                    </div>
-                    <div class="tempo-grid" id="row4a6">
-                        <span>4 a 6m:</span>
-                        <input type="number" step="0.1" id="modalSetup2" placeholder="Setup" value="0">
-                        <input type="number" step="0.1" id="modalOperacao2" placeholder="Op." value="0">
-                    </div>
-                    <div class="tempo-grid" id="row6a12">
-                        <span>6.1 a 12m:</span>
-                        <input type="number" step="0.1" id="modalSetup3" placeholder="Setup" value="0">
-                        <input type="number" step="0.1" id="modalOperacao3" placeholder="Op." value="0">
-                    </div>
-                </div>
-                
-                <div id="tabelaTempoDual" style="display:none;">
-                    
-                    <label class="tabela-header">Tempos para FLANGEADO (Flang)</label>
-                    <div class="tempo-grid">
-                        <span>Faixa</span>
-                        <span>Setup</span>
-                        <span>Operação</span>
-                    </div>
-                    <div class="tempo-grid">
-                        <span>1 a 3.9m:</span>
-                        <input type="number" step="0.1" id="modalFlangSetup1" placeholder="Setup" value="0">
-                        <input type="number" step="0.1" id="modalFlangOperacao1" placeholder="Op." value="0">
-                    </div>
-                    <div class="tempo-grid">
-                        <span>4 a 6m:</span>
-                        <input type="number" step="0.1" id="modalFlangSetup2" placeholder="Setup" value="0">
-                        <input type="number" step="0.1" id="modalFlangOperacao2" placeholder="Op." value="0">
-                    </div>
-                    <div class="tempo-grid">
-                        <span>6.1 a 12m:</span>
-                        <input type="number" step="0.1" id="modalFlangSetup3" placeholder="Setup" value="0">
-                        <input type="number" step="0.1" id="modalFlangOperacao3" placeholder="Op." value="0">
-                    </div>
-                    
-                    <label class="tabela-header" style="margin-top: 20px;">Tempos para ENGASTADO (Eng)</label>
-                    <div class="tempo-grid">
-                        <span>Faixa</span>
-                        <span>Setup</span>
-                        <span>Operação</span>
-                    </div>
-                    <div class="tempo-grid">
-                        <span>1 a 3.9m:</span>
-                        <input type="number" step="0.1" id="modalEngSetup1" placeholder="Setup" value="0">
-                        <input type="number" step="0.1" id="modalEngOperacao1" placeholder="Op." value="0">
-                    </div>
-                    <div class="tempo-grid">
-                        <span>4 a 6m:</span>
-                        <input type="number" step="0.1" id="modalEngSetup2" placeholder="Setup" value="0">
-                        <input type="number" step="0.1" id="modalEngOperacao2" placeholder="Op." value="0">
-                    </div>
-                    <div class="tempo-grid">
-                        <span>6.1 a 12m:</span>
-                        <input type="number" step="0.1" id="modalEngSetup3" placeholder="Setup" value="0">
-                        <input type="number" step="0.1" id="modalEngOperacao3" placeholder="Op." value="0">
-                    </div>
-                </div>
-            </div>
-            <input type="hidden" id="modalEditIndex">
-            <button style="margin-top: 15px;" onclick="salvarItem()">Salvar Item</button>
+      <div class="grid-form">
+        <div class="campo">
+          <label>Nome da Coluna</label>
+          <input type="text" id="columnName" placeholder="Ex: Nome">
         </div>
-    </div>
-    
-    <script src="script.js"></script>
+
+        <div class="campo">
+          <label>Tipo</label>
+          <select id="columnType">
+            <option value="text">Texto</option>
+            <option value="number">Número</option>
+            <option value="date">Data</option>
+          </select>
+        </div>
+      </div>
+
+      <button id="addColumnBtn">
+        Adicionar Coluna
+      </button>
+    </section>
+
+    <!-- Formulário -->
+    <section class="card">
+      <div class="titulo-linha">
+        <h2>Adicionar Linha</h2>
+      </div>
+
+      <form id="rowForm" class="dynamic-form"></form>
+
+      <button id="addRowBtn">
+        Salvar Linha
+      </button>
+    </section>
+
+    <!-- Tabela -->
+    <section class="card tabela-card">
+      <div class="titulo-linha">
+        <h2>Tabela</h2>
+
+        <button id="clearBtn" class="danger">
+          Limpar Tudo
+        </button>
+      </div>
+
+      <div class="table-wrapper">
+        <table id="dataTable">
+          <thead>
+            <tr id="tableHead"></tr>
+          </thead>
+
+          <tbody id="tableBody"></tbody>
+        </table>
+      </div>
+    </section>
+
+  </div>
+
+  <script src="script.js"></script>
 </body>
 </html>
