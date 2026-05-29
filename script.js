@@ -951,6 +951,148 @@ generatePdfBtn.addEventListener(
   "click",
   generatePDF
 );
+
+const openFilterPreviewBtn =
+  document.getElementById("openFilterPreviewBtn");
+
+const filterPreviewModal =
+  document.getElementById("filterPreviewModal");
+
+const filterPreviewTable =
+  document.getElementById("filterPreviewTable");
+
+const applyFilterBtn =
+  document.getElementById("applyFilterBtn");
+
+const closeFilterPreviewBtn =
+  document.getElementById("closeFilterPreviewBtn");
+
+// SMART TAB
+const openSmartTabBtn =
+  document.getElementById("openSmartTabBtn");
+
+const smartModal =
+  document.getElementById("smartModal");
+
+const smartColumn =
+  document.getElementById("smartColumn");
+
+const smartOperation =
+  document.getElementById("smartOperation");
+
+const smartValue =
+  document.getElementById("smartValue");
+
+const calcSmartBtn =
+  document.getElementById("calcSmartBtn");
+
+const smartResult =
+  document.getElementById("smartResult");
+
+const closeSmartBtn =
+  document.getElementById("closeSmartBtn");
+
+openFilterPreviewBtn.onclick = () => {
+  filterPreviewModal.classList.add("active");
+  renderFilterPreview();
+};
+
+closeFilterPreviewBtn.onclick = () => {
+  filterPreviewModal.classList.remove("active");
+};
+
+function renderFilterPreview() {
+
+  const rows = getFilteredRows();
+
+  let html = "<table><tr>";
+
+  database.columns.forEach(c => {
+    html += `<th>${c.name}</th>`;
+  });
+
+  html += "</tr>";
+
+  rows.forEach(r => {
+    html += "<tr>";
+    r.data.forEach(d => {
+      html += `<td>${d}</td>`;
+    });
+    html += "</tr>";
+  });
+
+  html += "</table>";
+
+  filterPreviewTable.innerHTML = html;
+};
+
+applyFilterBtn.onclick = () => {
+
+  renderTable(); // atualiza tabela principal
+
+  alert("Filtro aplicado na tabela principal");
+
+  filterPreviewModal.classList.remove("active");
+
+};
+
+openSmartTabBtn.onclick = () => {
+
+  smartModal.classList.add("active");
+
+  smartColumn.innerHTML = "";
+
+  database.columns.forEach(c => {
+    if(c.type === "number") {
+      smartColumn.innerHTML += `<option>${c.name}</option>`;
+    }
+  });
+
+};
+
+closeSmartBtn.onclick = () => {
+  smartModal.classList.remove("active");
+};
+calcSmartBtn.onclick = () => {
+
+  const columnName = smartColumn.value;
+  const operation = smartOperation.value;
+  const extra = parseFloat(smartValue.value || 0);
+
+  const index = database.columns.findIndex(c => c.name === columnName);
+
+  const values = database.rows
+    .map(r => parseFloat(r.data[index]))
+    .filter(v => !isNaN(v));
+
+  let result = 0;
+
+  if(operation === "sum") {
+    result = values.reduce((a,b) => a + b, 0);
+  }
+
+  if(operation === "avg") {
+    result = values.reduce((a,b) => a + b, 0) / values.length;
+  }
+
+  if(operation === "mult") {
+    result = values.reduce((a,b) => a * b, 1);
+  }
+
+  if(operation === "div") {
+    result = values.reduce((a,b) => a / b);
+  }
+
+  if(operation === "percent") {
+    result = (values.reduce((a,b) => a + b, 0) * extra) / 100;
+  }
+
+  smartResult.innerHTML = `
+    <h3>Resultado: ${result}</h3>
+  `;
+
+};
+
 // ======================================
 // START
 // ======================================
