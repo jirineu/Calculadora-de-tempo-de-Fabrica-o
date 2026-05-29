@@ -24,6 +24,73 @@
 
     </header>
 
+<!-- BOTÕES NOVOS -->
+<div class="top-actions">
+
+  <button id="openFilterPreviewBtn">
+    🔎 Filtrar Visual
+  </button>
+
+  <button id="openSmartTabBtn">
+    📊 Aba Inteligente
+  </button>
+
+</div>
+
+<!-- POPUP FILTRO VISUAL -->
+<div id="filterPreviewModal" class="modal">
+
+  <div class="modal-content">
+
+    <h2>Pré-visualização do Filtro</h2>
+
+    <div id="filterPreviewTable"></div>
+
+    <button id="applyFilterBtn">
+      Aplicar Filtro
+    </button>
+
+    <button id="closeFilterPreviewBtn">
+      Fechar
+    </button>
+
+  </div>
+
+</div>
+
+<!-- ABA INTELIGENTE -->
+<div id="smartModal" class="modal">
+
+  <div class="modal-content">
+
+    <h2>Aba Inteligente (Excel Lite)</h2>
+
+    <select id="smartColumn"></select>
+
+    <select id="smartOperation">
+      <option value="sum">SOMA</option>
+      <option value="avg">MÉDIA</option>
+      <option value="mult">MULTIPLICAÇÃO</option>
+      <option value="div">DIVISÃO</option>
+      <option value="percent">PORCENTAGEM</option>
+    </select>
+
+    <input id="smartValue" placeholder="Valor extra (se necessário)">
+
+    <button id="calcSmartBtn">
+      Calcular
+    </button>
+
+    <div id="smartResult"></div>
+
+    <button id="closeSmartBtn">
+      Fechar
+    </button>
+
+  </div>
+
+</div>
+
     <!-- NOVA COLUNA -->
     <section class="card">
 
