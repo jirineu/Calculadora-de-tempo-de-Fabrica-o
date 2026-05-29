@@ -1,10 +1,46 @@
+Substitua completamente o seu script.js por este abaixo.
+Agora ele possui:
+
+Estrutura única de dados (database)
+
+Salvamento automático em localStorage
+
+Sistema preparado para API Google Sheets
+
+Funções postData() e getData()
+
+Renderização apenas do localStorage
+
+Estrutura preparada para sincronização futura
+
+Persistência automática ao recarregar a página
+
+
 // script.js
 
-const columns = [];
-const rows = [];
+// ======================================
+// BANCO DE DADOS LOCAL
+// ======================================
 
-let currentEditId = null;
-let nextId = 1;
+let database = {
+  columns: [],
+  rows: [],
+  nextId: 1
+};
+
+// ======================================
+// CONFIG
+// ======================================
+
+const STORAGE_KEY = "lista_database";
+
+// URL futura do Google Apps Script
+const API_URL = "COLE_SUA_URL_AQUI";
+
+
+// ======================================
+// ELEMENTOS
+// ======================================
 
 const columnName = document.getElementById("columnName");
 const columnType = document.getElementById("columnType");
@@ -23,35 +59,189 @@ const clearBtn = document.getElementById("clearBtn");
 const deleteBtn = document.getElementById("deleteBtn");
 const deleteIdInput = document.getElementById("deleteId");
 
-// Adicionar coluna
-addColumnBtn.addEventListener("click", () => {
+
+// ======================================
+// CONTROLE DE EDIÇÃO
+// ======================================
+
+let currentEditId = null;
+
+
+// ======================================
+// LOCAL STORAGE
+// ======================================
+
+// Salvar no localStorage
+function saveLocalDatabase(){
+
+  localStorage.setItem(
+    STORAGE_KEY,
+    JSON.stringify(database)
+  );
+
+}
+
+// Carregar do localStorage
+function loadLocalDatabase(){
+
+  const data = localStorage.getItem(STORAGE_KEY);
+
+  if(data){
+
+    database = JSON.parse(data);
+
+  }
+
+}
+
+
+// ======================================
+// API - PREPARAÇÃO GOOGLE SHEETS
+// ======================================
+
+// POST
+async function postData(payload){
+
+  try{
+
+    // DESATIVADO POR ENQUANTO
+
+    /*
+    await fetch(API_URL, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(payload)
+    });
+    */
+
+    console.log("POST preparado:", payload);
+
+  } catch(error){
+
+    console.error("Erro POST:", error);
+
+  }
+
+}
+
+
+// GET
+async function getData(){
+
+  try{
+
+    // DESATIVADO POR ENQUANTO
+
+    /*
+    const response = await fetch(API_URL);
+
+    const data = await response.json();
+
+    return data;
+    */
+
+    console.log("GET preparado");
+
+    return null;
+
+  } catch(error){
+
+    console.error("Erro GET:", error);
+
+    return null;
+
+  }
+
+}
+
+
+// ======================================
+// SALVAMENTO GLOBAL
+// ======================================
+
+async function saveDatabase(){
+
+  // Salva local
+  saveLocalDatabase();
+
+  // Prepara envio remoto
+  await postData(database);
+
+}
+
+
+// ======================================
+// CARREGAMENTO GLOBAL
+// ======================================
+
+async function initializeDatabase(){
+
+  // Futuro:
+  // dados API -> localStorage
+
+  const apiData = await getData();
+
+  // Se existir API no futuro
+  if(apiData){
+
+    database = apiData;
+
+    saveLocalDatabase();
+
+  } else {
+
+    // Atualmente:
+    // usa localStorage
+
+    loadLocalDatabase();
+
+  }
+
+}
+
+
+// ======================================
+// ADICIONAR COLUNA
+// ======================================
+
+addColumnBtn.addEventListener("click", async () => {
 
   const name = columnName.value.trim();
   const type = columnType.value;
 
   if(!name){
+
     alert("Digite o nome da coluna.");
     return;
+
   }
 
-  columns.push({
+  database.columns.push({
     name,
     type
   });
 
   columnName.value = "";
 
+  await saveDatabase();
+
   renderForm();
   renderTable();
 
 });
 
-// Criar formulário
+
+// ======================================
+// FORMULÁRIO
+// ======================================
+
 function renderForm(data = null){
 
   rowForm.innerHTML = "";
 
-  if(columns.length === 0){
+  if(database.columns.length === 0){
 
     rowForm.innerHTML = `
       <p class="sem-dados">
@@ -60,9 +250,10 @@ function renderForm(data = null){
     `;
 
     return;
+
   }
 
-  columns.forEach((column, index) => {
+  database.columns.forEach((column, index) => {
 
     const div = document.createElement("div");
     div.classList.add("campo");
@@ -76,7 +267,9 @@ function renderForm(data = null){
     input.placeholder = `Digite ${column.name}`;
 
     if(data){
+
       input.value = data[index];
+
     }
 
     div.appendChild(label);
@@ -88,12 +281,18 @@ function renderForm(data = null){
 
 }
 
-// Salvar linha
-saveRowBtn.addEventListener("click", () => {
 
-  if(columns.length === 0){
+// ======================================
+// SALVAR LINHA
+// ======================================
+
+saveRowBtn.addEventListener("click", async () => {
+
+  if(database.columns.length === 0){
+
     alert("Crie uma coluna primeiro.");
     return;
+
   }
 
   const inputs = rowForm.querySelectorAll("input");
@@ -105,7 +304,9 @@ saveRowBtn.addEventListener("click", () => {
   inputs.forEach(input => {
 
     if(input.value.trim() === ""){
+
       vazio = true;
+
     }
 
     values.push(input.value);
@@ -113,16 +314,20 @@ saveRowBtn.addEventListener("click", () => {
   });
 
   if(vazio){
+
     alert("Preencha todos os campos.");
     return;
+
   }
 
-  // Editar
+  // EDITAR
   if(currentEditId !== null){
 
-    const index = rows.findIndex(row => row.id === currentEditId);
+    const index = database.rows.findIndex(
+      row => row.id === currentEditId
+    );
 
-    rows[index].data = values;
+    database.rows[index].data = values;
 
     currentEditId = null;
 
@@ -130,31 +335,44 @@ saveRowBtn.addEventListener("click", () => {
 
   } else {
 
-    // Criar nova linha
-    rows.push({
-      id: nextId++,
-      data: values
+    // NOVA LINHA
+
+    database.rows.push({
+
+      id: database.nextId++,
+
+      data: values,
+
+      createdAt: new Date().toISOString()
+
     });
 
   }
+
+  await saveDatabase();
 
   renderForm();
   renderTable();
 
 });
 
-// Renderizar tabela
+
+// ======================================
+// TABELA
+// ======================================
+
 function renderTable(){
 
-  // Cabeçalho
   tableHead.innerHTML = "";
 
+  // ID
   const thId = document.createElement("th");
   thId.innerText = "ID";
 
   tableHead.appendChild(thId);
 
-  columns.forEach(column => {
+  // COLUNAS
+  database.columns.forEach(column => {
 
     const th = document.createElement("th");
     th.innerText = column.name;
@@ -163,28 +381,30 @@ function renderTable(){
 
   });
 
+  // AÇÕES
   const thAction = document.createElement("th");
   thAction.innerText = "Ações";
 
   tableHead.appendChild(thAction);
 
-  // Corpo
+  // CORPO
   tableBody.innerHTML = "";
 
-  if(rows.length === 0){
+  if(database.rows.length === 0){
 
     tableBody.innerHTML = `
       <tr>
-        <td colspan="${columns.length + 2}" class="sem-dados">
+        <td colspan="${database.columns.length + 2}" class="sem-dados">
           Nenhuma linha cadastrada.
         </td>
       </tr>
     `;
 
     return;
+
   }
 
-  rows.forEach(row => {
+  database.rows.forEach(row => {
 
     const tr = document.createElement("tr");
 
@@ -194,26 +414,28 @@ function renderTable(){
 
     tr.appendChild(tdId);
 
-    // Dados
+    // DADOS
     row.data.forEach(value => {
 
       const td = document.createElement("td");
+
       td.innerText = value;
 
       tr.appendChild(td);
 
     });
 
-    // Ações
-    const actionTd = document.createElement("td");
+    // AÇÕES
+    const tdAction = document.createElement("td");
 
     const actions = document.createElement("div");
     actions.classList.add("action-buttons");
 
-    // Editar
+    // EDITAR
     const editBtn = document.createElement("button");
 
     editBtn.innerText = "Editar";
+
     editBtn.classList.add("edit-btn");
 
     editBtn.addEventListener("click", () => {
@@ -231,34 +453,37 @@ function renderTable(){
 
     });
 
-    // Excluir
-    const deleteBtn = document.createElement("button");
+    // EXCLUIR
+    const deleteButton = document.createElement("button");
 
-    deleteBtn.innerText = "Excluir";
-    deleteBtn.classList.add("delete-btn");
+    deleteButton.innerText = "Excluir";
 
-    deleteBtn.addEventListener("click", () => {
+    deleteButton.classList.add("delete-btn");
+
+    deleteButton.addEventListener("click", async () => {
 
       const confirmar = confirm(
-        `Deseja excluir a linha ID ${row.id}?`
+        `Deseja excluir o ID ${row.id}?`
       );
 
       if(!confirmar) return;
 
-      const index = rows.findIndex(item => item.id === row.id);
+      database.rows = database.rows.filter(
+        item => item.id !== row.id
+      );
 
-      rows.splice(index, 1);
+      await saveDatabase();
 
       renderTable();
 
     });
 
     actions.appendChild(editBtn);
-    actions.appendChild(deleteBtn);
+    actions.appendChild(deleteButton);
 
-    actionTd.appendChild(actions);
+    tdAction.appendChild(actions);
 
-    tr.appendChild(actionTd);
+    tr.appendChild(tdAction);
 
     tableBody.appendChild(tr);
 
@@ -266,51 +491,86 @@ function renderTable(){
 
 }
 
-// Excluir por ID
-deleteBtn.addEventListener("click", () => {
+
+// ======================================
+// EXCLUIR POR ID
+// ======================================
+
+deleteBtn.addEventListener("click", async () => {
 
   const id = Number(deleteIdInput.value);
 
   if(!id){
+
     alert("Digite um ID válido.");
     return;
+
   }
 
-  const index = rows.findIndex(row => row.id === id);
+  const exists = database.rows.some(
+    row => row.id === id
+  );
 
-  if(index === -1){
+  if(!exists){
+
     alert("ID não encontrado.");
     return;
+
   }
 
-  rows.splice(index, 1);
+  database.rows = database.rows.filter(
+    row => row.id !== id
+  );
 
   deleteIdInput.value = "";
+
+  await saveDatabase();
 
   renderTable();
 
 });
 
-// Limpar tudo
-clearBtn.addEventListener("click", () => {
+
+// ======================================
+// LIMPAR TUDO
+// ======================================
+
+clearBtn.addEventListener("click", async () => {
 
   const confirmar = confirm(
-    "Deseja apagar todas as colunas e linhas?"
+    "Deseja apagar tudo?"
   );
 
   if(!confirmar) return;
 
-  columns.length = 0;
-  rows.length = 0;
+  database = {
+    columns: [],
+    rows: [],
+    nextId: 1
+  };
 
   currentEditId = null;
-  nextId = 1;
+
+  await saveDatabase();
 
   renderForm();
   renderTable();
 
 });
 
-// Inicialização
-renderForm();
-renderTable();
+
+// ======================================
+// INICIALIZAÇÃO
+// ======================================
+
+async function startApp(){
+
+  await initializeDatabase();
+
+  renderForm();
+
+  renderTable();
+
+}
+
+startApp();
