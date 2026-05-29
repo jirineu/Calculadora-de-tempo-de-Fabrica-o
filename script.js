@@ -639,6 +639,319 @@ clearBtn.addEventListener(
 );
 
 // ======================================
+// PDF
+// ======================================
+
+const openPdfModalBtn =
+  document.getElementById(
+    "openPdfModalBtn"
+  );
+
+const closePdfModalBtn =
+  document.getElementById(
+    "closePdfModalBtn"
+  );
+
+const pdfModal =
+  document.getElementById(
+    "pdfModal"
+  );
+
+const pdfFiltersContainer =
+  document.getElementById(
+    "pdfFiltersContainer"
+  );
+
+const addPdfFilterBtn =
+  document.getElementById(
+    "addPdfFilterBtn"
+  );
+
+const generatePdfBtn =
+  document.getElementById(
+    "generatePdfBtn"
+  );
+
+// ======================================
+// ABRIR MODAL
+// ======================================
+
+function openPdfModal(){
+
+  pdfModal.classList.add("active");
+
+  if(
+    pdfFiltersContainer.children.length === 0
+  ){
+
+    addPdfFilter();
+
+  }
+
+}
+
+// ======================================
+// FECHAR MODAL
+// ======================================
+
+function closePdfModal(){
+
+  pdfModal.classList.remove("active");
+
+}
+
+// ======================================
+// EVENTOS
+// ======================================
+
+openPdfModalBtn.addEventListener(
+  "click",
+  openPdfModal
+);
+
+closePdfModalBtn.addEventListener(
+  "click",
+  closePdfModal
+);
+
+// ======================================
+// NOVO FILTRO
+// ======================================
+
+function addPdfFilter(){
+
+  const filter =
+    document.createElement("div");
+
+  filter.classList.add("pdf-filter");
+
+  // SELECT COLUNA
+
+  const columnSelect =
+    document.createElement("select");
+
+  database.columns.forEach(
+    column => {
+
+      const option =
+        document.createElement(
+          "option"
+        );
+
+      option.value = column.name;
+
+      option.innerText = column.name;
+
+      columnSelect.appendChild(option);
+
+    }
+  );
+
+  // INPUT VALOR
+
+  const valueInput =
+    document.createElement("input");
+
+  valueInput.type = "text";
+
+  valueInput.placeholder =
+    "Valor para filtrar";
+
+  // REMOVER FILTRO
+
+  const removeBtn =
+    document.createElement("button");
+
+  removeBtn.type = "button";
+
+  removeBtn.innerText = "Remover";
+
+  removeBtn.classList.add(
+    "pdf-filter-remove"
+  );
+
+  removeBtn.addEventListener(
+    "click",
+    () => {
+
+      filter.remove();
+
+    }
+  );
+
+  filter.appendChild(columnSelect);
+
+  filter.appendChild(valueInput);
+
+  filter.appendChild(removeBtn);
+
+  pdfFiltersContainer.appendChild(
+    filter
+  );
+
+}
+
+// ======================================
+// EVENTO NOVO FILTRO
+// ======================================
+
+addPdfFilterBtn.addEventListener(
+  "click",
+  addPdfFilter
+);
+
+// ======================================
+// FILTRAR DADOS
+// ======================================
+
+function getFilteredRows(){
+
+  const filters =
+    pdfFiltersContainer.querySelectorAll(
+      ".pdf-filter"
+    );
+
+  let filteredRows = [...database.rows];
+
+  filters.forEach(filter => {
+
+    const selects =
+      filter.querySelector("select");
+
+    const inputs =
+      filter.querySelector("input");
+
+    const columnName =
+      selects.value;
+
+    const filterValue =
+      inputs.value
+        .trim()
+        .toLowerCase();
+
+    if(filterValue === "") return;
+
+    const columnIndex =
+      database.columns.findIndex(
+        column =>
+          column.name === columnName
+      );
+
+    filteredRows =
+      filteredRows.filter(row => {
+
+        const value =
+          String(
+            row.data[columnIndex]
+          ).toLowerCase();
+
+        return value.includes(
+          filterValue
+        );
+
+      });
+
+  });
+
+  return filteredRows;
+
+}
+
+// ======================================
+// GERAR PDF
+// ======================================
+
+async function generatePDF(){
+
+  const { jsPDF } = window.jspdf;
+
+  const doc = new jsPDF();
+
+  const rows =
+    getFilteredRows();
+
+  let y = 20;
+
+  // TÍTULO
+
+  doc.setFontSize(18);
+
+  doc.text(
+    "Relatório da Tabela",
+    14,
+    y
+  );
+
+  y += 15;
+
+  // CABEÇALHO
+
+  doc.setFontSize(10);
+
+  const headers = [
+    "ID",
+    ...database.columns.map(
+      column => column.name
+    )
+  ];
+
+  doc.text(
+    headers.join(" | "),
+    14,
+    y
+  );
+
+  y += 10;
+
+  // LINHAS
+
+  rows.forEach(row => {
+
+    const line = [
+
+      row.id,
+
+      ...row.data
+
+    ];
+
+    doc.text(
+      line.join(" | "),
+      14,
+      y
+    );
+
+    y += 10;
+
+    // NOVA PÁGINA
+
+    if(y > 270){
+
+      doc.addPage();
+
+      y = 20;
+
+    }
+
+  });
+
+  // DOWNLOAD
+
+  doc.save(
+    `relatorio-${Date.now()}.pdf`
+  );
+
+}
+
+// ======================================
+// EVENTO PDF
+// ======================================
+
+generatePdfBtn.addEventListener(
+  "click",
+  generatePDF
+);
+// ======================================
 // START
 // ======================================
 
@@ -653,3 +966,4 @@ async function startApp(){
 }
 
 startApp();
+
