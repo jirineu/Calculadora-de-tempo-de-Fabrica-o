@@ -181,3 +181,220 @@ tr:hover td{
   }
 
 }
+
+/* =========================================
+PDF
+========================================= */
+
+.pdf-top{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 15px;
+}
+
+.pdf-subtitle{
+  color: #777;
+  margin-top: 4px;
+}
+
+.pdf-btn{
+  background: linear-gradient(
+    135deg,
+    #dc2626,
+    #991b1b
+  );
+
+  display: flex;
+  align-items: center;
+  gap: 10px;
+
+  box-shadow:
+    0 6px 20px rgba(220,38,38,0.3);
+
+  transition: 0.2s;
+}
+
+.pdf-btn:hover{
+  transform: translateY(-2px);
+}
+
+.secondary-btn{
+  background: #111827;
+}
+
+/* =========================================
+MODAL
+========================================= */
+
+.pdf-modal{
+
+  position: fixed;
+
+  inset: 0;
+
+  background: rgba(0,0,0,0.5);
+
+  display: none;
+
+  align-items: center;
+
+  justify-content: center;
+
+  padding: 20px;
+
+  z-index: 9999;
+
+  backdrop-filter: blur(4px);
+
+}
+
+.pdf-modal.active{
+  display: flex;
+}
+
+.pdf-modal-content{
+
+  width: 100%;
+
+  max-width: 650px;
+
+  background: white;
+
+  border-radius: 24px;
+
+  padding: 20px;
+
+  animation: modalOpen 0.2s ease;
+
+  max-height: 90vh;
+
+  overflow-y: auto;
+
+}
+
+@keyframes modalOpen{
+
+  from{
+    opacity: 0;
+    transform: scale(0.95);
+  }
+
+  to{
+    opacity: 1;
+    transform: scale(1);
+  }
+
+}
+
+.pdf-header{
+
+  display: flex;
+
+  justify-content: space-between;
+
+  align-items: center;
+
+  margin-bottom: 20px;
+
+}
+
+.close-modal-btn{
+
+  width: 42px;
+
+  height: 42px;
+
+  border-radius: 12px;
+
+  background: #ef4444;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  font-size: 18px;
+
+}
+
+.pdf-filters-container{
+
+  display: flex;
+
+  flex-direction: column;
+
+  gap: 14px;
+
+  margin-bottom: 20px;
+
+}
+
+/* =========================================
+FILTROS
+========================================= */
+
+.pdf-filter{
+
+  background: #f8fafc;
+
+  border: 1px solid #e5e7eb;
+
+  border-radius: 18px;
+
+  padding: 15px;
+
+  display: grid;
+
+  grid-template-columns:
+    1fr
+    1fr
+    auto;
+
+  gap: 12px;
+
+  align-items: end;
+
+}
+
+.pdf-filter-remove{
+
+  background: #dc2626;
+
+  height: 48px;
+
+}
+
+.pdf-actions{
+
+  display: flex;
+
+  gap: 12px;
+
+}
+
+/* =========================================
+RESPONSIVO
+========================================= */
+
+@media(max-width: 700px){
+
+  .pdf-top{
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .pdf-filter{
+
+    grid-template-columns: 1fr;
+
+  }
+
+  .pdf-actions{
+
+    flex-direction: column;
+
+  }
+
+}
