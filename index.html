@@ -2,8 +2,9 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
   <title>Criador de Listas</title>
 
   <link rel="stylesheet" href="style.css">
@@ -14,14 +15,16 @@
 
     <header class="topo">
       <h1>Criador de Listas</h1>
-      <p>Crie colunas e adicione dados em linhas.</p>
+      <p>Crie colunas, adicione linhas e edite dados.</p>
     </header>
 
-    <!-- Criar colunas -->
+    <!-- Criar coluna -->
     <section class="card">
+
       <h2>Nova Coluna</h2>
 
       <div class="grid-form">
+
         <div class="campo">
           <label>Nome da Coluna</label>
           <input type="text" id="columnName" placeholder="Ex: Nome">
@@ -29,34 +32,59 @@
 
         <div class="campo">
           <label>Tipo</label>
+
           <select id="columnType">
             <option value="text">Texto</option>
             <option value="number">Número</option>
             <option value="date">Data</option>
           </select>
         </div>
+
       </div>
 
       <button id="addColumnBtn">
         Adicionar Coluna
       </button>
+
     </section>
 
-    <!-- Formulário -->
+    <!-- Inserir linha -->
     <section class="card">
-      <div class="titulo-linha">
-        <h2>Adicionar Linha</h2>
-      </div>
+
+      <h2>Adicionar Linha</h2>
 
       <form id="rowForm" class="dynamic-form"></form>
 
-      <button id="addRowBtn">
+      <button id="saveRowBtn">
         Salvar Linha
       </button>
+
+    </section>
+
+    <!-- Excluir -->
+    <section class="card">
+
+      <h2>Excluir Linha por ID</h2>
+
+      <div class="delete-box">
+
+        <input
+          type="number"
+          id="deleteId"
+          placeholder="Digite o ID"
+        >
+
+        <button id="deleteBtn" class="danger">
+          Excluir
+        </button>
+
+      </div>
+
     </section>
 
     <!-- Tabela -->
-    <section class="card tabela-card">
+    <section class="card">
+
       <div class="titulo-linha">
         <h2>Tabela</h2>
 
@@ -66,14 +94,19 @@
       </div>
 
       <div class="table-wrapper">
-        <table id="dataTable">
+
+        <table>
+
           <thead>
             <tr id="tableHead"></tr>
           </thead>
 
           <tbody id="tableBody"></tbody>
+
         </table>
+
       </div>
+
     </section>
 
   </div>
