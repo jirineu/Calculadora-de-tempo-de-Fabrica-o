@@ -1,24 +1,30 @@
-<!-- index.html -->
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
+
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
   <title>Criador de Listas</title>
 
   <link rel="stylesheet" href="style.css">
+
 </head>
 <body>
 
   <div class="container">
 
     <header class="topo">
+
       <h1>Criador de Listas</h1>
-      <p>Crie colunas, adicione linhas e edite dados.</p>
+
+      <p>
+        Crie colunas, adicione linhas, edite e exclua dados.
+      </p>
+
     </header>
 
-    <!-- Criar coluna -->
+    <!-- NOVA COLUNA -->
     <section class="card">
 
       <h2>Nova Coluna</h2>
@@ -26,42 +32,59 @@
       <div class="grid-form">
 
         <div class="campo">
+
           <label>Nome da Coluna</label>
-          <input type="text" id="columnName" placeholder="Ex: Nome">
+
+          <input
+            type="text"
+            id="columnName"
+            placeholder="Ex: Nome"
+          >
+
         </div>
 
         <div class="campo">
+
           <label>Tipo</label>
 
           <select id="columnType">
+
             <option value="text">Texto</option>
             <option value="number">Número</option>
             <option value="date">Data</option>
+
           </select>
+
         </div>
 
       </div>
 
-      <button id="addColumnBtn">
+      <button
+        type="button"
+        id="addColumnBtn"
+      >
         Adicionar Coluna
       </button>
 
     </section>
 
-    <!-- Inserir linha -->
+    <!-- FORMULÁRIO -->
     <section class="card">
 
       <h2>Adicionar Linha</h2>
 
       <form id="rowForm" class="dynamic-form"></form>
 
-      <button id="saveRowBtn">
+      <button
+        type="button"
+        id="saveRowBtn"
+      >
         Salvar Linha
       </button>
 
     </section>
 
-    <!-- Excluir -->
+    <!-- EXCLUIR POR ID -->
     <section class="card">
 
       <h2>Excluir Linha por ID</h2>
@@ -74,7 +97,11 @@
           placeholder="Digite o ID"
         >
 
-        <button id="deleteBtn" class="danger">
+        <button
+          type="button"
+          id="deleteBtn"
+          class="danger"
+        >
           Excluir
         </button>
 
@@ -82,15 +109,21 @@
 
     </section>
 
-    <!-- Tabela -->
+    <!-- TABELA -->
     <section class="card">
 
       <div class="titulo-linha">
+
         <h2>Tabela</h2>
 
-        <button id="clearBtn" class="danger">
+        <button
+          type="button"
+          id="clearBtn"
+          class="danger"
+        >
           Limpar Tudo
         </button>
+
       </div>
 
       <div class="table-wrapper">
@@ -112,5 +145,6 @@
   </div>
 
   <script src="script.js"></script>
+
 </body>
 </html>
