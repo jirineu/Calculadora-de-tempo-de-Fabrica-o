@@ -7,10 +7,10 @@
 }
 
 body{
+  background: #f4f6f9;
   font-family: Arial, Helvetica, sans-serif;
-  background: #f3f5f7;
+  padding: 15px;
   color: #222;
-  padding: 16px;
 }
 
 .container{
@@ -24,7 +24,7 @@ body{
 
 .topo h1{
   font-size: 28px;
-  margin-bottom: 6px;
+  margin-bottom: 5px;
 }
 
 .topo p{
@@ -33,14 +33,14 @@ body{
 
 .card{
   background: white;
-  border-radius: 16px;
   padding: 16px;
+  border-radius: 16px;
   margin-bottom: 18px;
-  box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+  box-shadow: 0 2px 10px rgba(0,0,0,0.06);
 }
 
 .card h2{
-  margin-bottom: 14px;
+  margin-bottom: 15px;
   font-size: 20px;
 }
 
@@ -49,6 +49,13 @@ body{
   grid-template-columns: 1fr 1fr;
   gap: 12px;
   margin-bottom: 14px;
+}
+
+.dynamic-form{
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-bottom: 15px;
 }
 
 .campo{
@@ -69,7 +76,7 @@ select{
   border-radius: 12px;
   border: 1px solid #ccc;
   font-size: 16px;
-  background: #fff;
+  background: white;
 }
 
 input:focus,
@@ -79,13 +86,12 @@ select:focus{
 }
 
 button{
-  width: 100%;
   border: none;
-  border-radius: 12px;
   padding: 14px;
+  border-radius: 12px;
+  cursor: pointer;
   font-size: 16px;
   font-weight: bold;
-  cursor: pointer;
   background: #2563eb;
   color: white;
   transition: 0.2s;
@@ -95,10 +101,8 @@ button:hover{
   opacity: 0.9;
 }
 
-.dynamic-form{
-  display: grid;
-  gap: 12px;
-  margin-bottom: 14px;
+.danger{
+  background: #dc2626;
 }
 
 .table-wrapper{
@@ -108,7 +112,7 @@ button:hover{
 table{
   width: 100%;
   border-collapse: collapse;
-  min-width: 600px;
+  min-width: 700px;
 }
 
 th{
@@ -116,31 +120,41 @@ th{
   color: white;
   padding: 12px;
   text-align: left;
-  font-size: 14px;
 }
 
 td{
   padding: 12px;
   border-bottom: 1px solid #ddd;
-  background: white;
 }
 
 tr:hover td{
   background: #f8fafc;
 }
 
+.action-buttons{
+  display: flex;
+  gap: 8px;
+}
+
+.edit-btn{
+  background: #f59e0b;
+}
+
+.delete-btn{
+  background: #dc2626;
+}
+
 .titulo-linha{
   display: flex;
-  align-items: center;
   justify-content: space-between;
+  align-items: center;
   margin-bottom: 14px;
   gap: 10px;
 }
 
-.danger{
-  background: #dc2626;
-  width: auto;
-  padding: 10px 14px;
+.delete-box{
+  display: flex;
+  gap: 10px;
 }
 
 .sem-dados{
@@ -149,7 +163,7 @@ tr:hover td{
   padding: 20px;
 }
 
-@media (max-width: 700px){
+@media(max-width: 700px){
 
   .grid-form{
     grid-template-columns: 1fr;
@@ -160,18 +174,12 @@ tr:hover td{
     align-items: stretch;
   }
 
-  .danger{
-    width: 100%;
+  .delete-box{
+    flex-direction: column;
   }
 
-  .topo h1{
-    font-size: 24px;
-  }
-
-  input,
-  select,
-  button{
-    font-size: 16px;
+  table{
+    min-width: 600px;
   }
 
 }
