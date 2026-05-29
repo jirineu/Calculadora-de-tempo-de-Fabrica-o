@@ -1,25 +1,5 @@
-Substitua completamente o seu script.js por este abaixo.
-Agora ele possui:
-
-Estrutura única de dados (database)
-
-Salvamento automático em localStorage
-
-Sistema preparado para API Google Sheets
-
-Funções postData() e getData()
-
-Renderização apenas do localStorage
-
-Estrutura preparada para sincronização futura
-
-Persistência automática ao recarregar a página
-
-
-// script.js
-
 // ======================================
-// BANCO DE DADOS LOCAL
+// BANCO DE DADOS
 // ======================================
 
 let database = {
@@ -34,9 +14,8 @@ let database = {
 
 const STORAGE_KEY = "lista_database";
 
-// URL futura do Google Apps Script
+// FUTURA API GOOGLE SHEETS
 const API_URL = "COLE_SUA_URL_AQUI";
-
 
 // ======================================
 // ELEMENTOS
@@ -59,80 +38,114 @@ const clearBtn = document.getElementById("clearBtn");
 const deleteBtn = document.getElementById("deleteBtn");
 const deleteIdInput = document.getElementById("deleteId");
 
-
 // ======================================
 // CONTROLE DE EDIÇÃO
 // ======================================
 
 let currentEditId = null;
 
-
 // ======================================
 // LOCAL STORAGE
 // ======================================
 
-// Salvar no localStorage
 function saveLocalDatabase(){
 
-  localStorage.setItem(
-    STORAGE_KEY,
-    JSON.stringify(database)
-  );
+  try{
 
-}
+    localStorage.setItem(
+      STORAGE_KEY,
+      JSON.stringify(database)
+    );
 
-// Carregar do localStorage
-function loadLocalDatabase(){
+  } catch(error){
 
-  const data = localStorage.getItem(STORAGE_KEY);
-
-  if(data){
-
-    database = JSON.parse(data);
+    console.error(
+      "Erro ao salvar localStorage:",
+      error
+    );
 
   }
 
 }
 
+function loadLocalDatabase(){
+
+  try{
+
+    const data = localStorage.getItem(STORAGE_KEY);
+
+    if(!data) return;
+
+    const parsed = JSON.parse(data);
+
+    if(
+      typeof parsed === "object" &&
+      parsed.columns &&
+      parsed.rows
+    ){
+
+      database = parsed;
+
+    }
+
+  } catch(error){
+
+    console.error(
+      "Erro ao carregar localStorage:",
+      error
+    );
+
+    localStorage.removeItem(STORAGE_KEY);
+
+  }
+
+}
 
 // ======================================
-// API - PREPARAÇÃO GOOGLE SHEETS
+// API GOOGLE SHEETS
 // ======================================
 
-// POST
 async function postData(payload){
 
   try{
 
-    // DESATIVADO POR ENQUANTO
+    // FUTURO
 
     /*
     await fetch(API_URL, {
+
       method: "POST",
+
       headers: {
         "Content-Type": "application/json"
       },
+
       body: JSON.stringify(payload)
+
     });
     */
 
-    console.log("POST preparado:", payload);
+    console.log(
+      "POST preparado:",
+      payload
+    );
 
   } catch(error){
 
-    console.error("Erro POST:", error);
+    console.error(
+      "Erro POST:",
+      error
+    );
 
   }
 
 }
 
-
-// GET
 async function getData(){
 
   try{
 
-    // DESATIVADO POR ENQUANTO
+    // FUTURO
 
     /*
     const response = await fetch(API_URL);
@@ -148,7 +161,10 @@ async function getData(){
 
   } catch(error){
 
-    console.error("Erro GET:", error);
+    console.error(
+      "Erro GET:",
+      error
+    );
 
     return null;
 
@@ -156,34 +172,26 @@ async function getData(){
 
 }
 
-
 // ======================================
 // SALVAMENTO GLOBAL
 // ======================================
 
 async function saveDatabase(){
 
-  // Salva local
   saveLocalDatabase();
 
-  // Prepara envio remoto
   await postData(database);
 
 }
 
-
 // ======================================
-// CARREGAMENTO GLOBAL
+// INICIALIZAÇÃO
 // ======================================
 
 async function initializeDatabase(){
 
-  // Futuro:
-  // dados API -> localStorage
-
   const apiData = await getData();
 
-  // Se existir API no futuro
   if(apiData){
 
     database = apiData;
@@ -192,46 +200,44 @@ async function initializeDatabase(){
 
   } else {
 
-    // Atualmente:
-    // usa localStorage
-
     loadLocalDatabase();
 
   }
 
 }
 
-
 // ======================================
 // ADICIONAR COLUNA
 // ======================================
 
-addColumnBtn.addEventListener("click", async () => {
+addColumnBtn.addEventListener(
+  "click",
+  async () => {
 
-  const name = columnName.value.trim();
-  const type = columnType.value;
+    const name = columnName.value.trim();
+    const type = columnType.value;
 
-  if(!name){
+    if(!name){
 
-    alert("Digite o nome da coluna.");
-    return;
+      alert("Digite o nome da coluna.");
+      return;
+
+    }
+
+    database.columns.push({
+      name,
+      type
+    });
+
+    columnName.value = "";
+
+    await saveDatabase();
+
+    renderForm();
+    renderTable();
 
   }
-
-  database.columns.push({
-    name,
-    type
-  });
-
-  columnName.value = "";
-
-  await saveDatabase();
-
-  renderForm();
-  renderTable();
-
-});
-
+);
 
 // ======================================
 // FORMULÁRIO
@@ -253,109 +259,122 @@ function renderForm(data = null){
 
   }
 
-  database.columns.forEach((column, index) => {
+  database.columns.forEach(
+    (column, index) => {
 
-    const div = document.createElement("div");
-    div.classList.add("campo");
+      const div = document.createElement("div");
+      div.classList.add("campo");
 
-    const label = document.createElement("label");
-    label.innerText = column.name;
+      const label = document.createElement("label");
+      label.innerText = column.name;
 
-    const input = document.createElement("input");
+      const input = document.createElement("input");
 
-    input.type = column.type;
-    input.placeholder = `Digite ${column.name}`;
+      input.type = column.type;
 
-    if(data){
+      input.placeholder =
+        `Digite ${column.name}`;
 
-      input.value = data[index];
+      if(data){
+
+        input.value = data[index];
+
+      }
+
+      div.appendChild(label);
+      div.appendChild(input);
+
+      rowForm.appendChild(div);
 
     }
-
-    div.appendChild(label);
-    div.appendChild(input);
-
-    rowForm.appendChild(div);
-
-  });
+  );
 
 }
-
 
 // ======================================
 // SALVAR LINHA
 // ======================================
 
-saveRowBtn.addEventListener("click", async () => {
+saveRowBtn.addEventListener(
+  "click",
+  async () => {
 
-  if(database.columns.length === 0){
+    if(database.columns.length === 0){
 
-    alert("Crie uma coluna primeiro.");
-    return;
+      alert(
+        "Crie uma coluna primeiro."
+      );
 
-  }
-
-  const inputs = rowForm.querySelectorAll("input");
-
-  const values = [];
-
-  let vazio = false;
-
-  inputs.forEach(input => {
-
-    if(input.value.trim() === ""){
-
-      vazio = true;
+      return;
 
     }
 
-    values.push(input.value);
+    const inputs =
+      rowForm.querySelectorAll("input");
 
-  });
+    const values = [];
 
-  if(vazio){
+    let vazio = false;
 
-    alert("Preencha todos os campos.");
-    return;
+    inputs.forEach(input => {
 
-  }
+      if(input.value.trim() === ""){
 
-  // EDITAR
-  if(currentEditId !== null){
+        vazio = true;
 
-    const index = database.rows.findIndex(
-      row => row.id === currentEditId
-    );
+      }
 
-    database.rows[index].data = values;
-
-    currentEditId = null;
-
-    saveRowBtn.innerText = "Salvar Linha";
-
-  } else {
-
-    // NOVA LINHA
-
-    database.rows.push({
-
-      id: database.nextId++,
-
-      data: values,
-
-      createdAt: new Date().toISOString()
+      values.push(input.value);
 
     });
 
+    if(vazio){
+
+      alert("Preencha todos os campos.");
+
+      return;
+
+    }
+
+    // EDITAR
+    if(currentEditId !== null){
+
+      const index =
+        database.rows.findIndex(
+          row => row.id === currentEditId
+        );
+
+      database.rows[index].data = values;
+
+      currentEditId = null;
+
+      saveRowBtn.innerText =
+        "Salvar Linha";
+
+    } else {
+
+      // NOVA LINHA
+
+      database.rows.push({
+
+        id: database.nextId++,
+
+        data: values,
+
+        createdAt:
+          new Date().toISOString()
+
+      });
+
+    }
+
+    await saveDatabase();
+
+    renderForm();
+    renderTable();
+
   }
-
-  await saveDatabase();
-
-  renderForm();
-  renderTable();
-
-});
-
+);
 
 // ======================================
 // TABELA
@@ -366,15 +385,21 @@ function renderTable(){
   tableHead.innerHTML = "";
 
   // ID
-  const thId = document.createElement("th");
+
+  const thId =
+    document.createElement("th");
+
   thId.innerText = "ID";
 
   tableHead.appendChild(thId);
 
   // COLUNAS
+
   database.columns.forEach(column => {
 
-    const th = document.createElement("th");
+    const th =
+      document.createElement("th");
+
     th.innerText = column.name;
 
     tableHead.appendChild(th);
@@ -382,19 +407,26 @@ function renderTable(){
   });
 
   // AÇÕES
-  const thAction = document.createElement("th");
+
+  const thAction =
+    document.createElement("th");
+
   thAction.innerText = "Ações";
 
   tableHead.appendChild(thAction);
 
   // CORPO
+
   tableBody.innerHTML = "";
 
   if(database.rows.length === 0){
 
     tableBody.innerHTML = `
       <tr>
-        <td colspan="${database.columns.length + 2}" class="sem-dados">
+        <td
+          colspan="${database.columns.length + 2}"
+          class="sem-dados"
+        >
           Nenhuma linha cadastrada.
         </td>
       </tr>
@@ -406,18 +438,24 @@ function renderTable(){
 
   database.rows.forEach(row => {
 
-    const tr = document.createElement("tr");
+    const tr =
+      document.createElement("tr");
 
     // ID
-    const tdId = document.createElement("td");
+
+    const tdId =
+      document.createElement("td");
+
     tdId.innerText = row.id;
 
     tr.appendChild(tdId);
 
     // DADOS
+
     row.data.forEach(value => {
 
-      const td = document.createElement("td");
+      const td =
+        document.createElement("td");
 
       td.innerText = value;
 
@@ -426,59 +464,87 @@ function renderTable(){
     });
 
     // AÇÕES
-    const tdAction = document.createElement("td");
 
-    const actions = document.createElement("div");
-    actions.classList.add("action-buttons");
+    const tdAction =
+      document.createElement("td");
+
+    const actions =
+      document.createElement("div");
+
+    actions.classList.add(
+      "action-buttons"
+    );
 
     // EDITAR
-    const editBtn = document.createElement("button");
+
+    const editBtn =
+      document.createElement("button");
+
+    editBtn.type = "button";
 
     editBtn.innerText = "Editar";
 
     editBtn.classList.add("edit-btn");
 
-    editBtn.addEventListener("click", () => {
+    editBtn.addEventListener(
+      "click",
+      () => {
 
-      currentEditId = row.id;
+        currentEditId = row.id;
 
-      renderForm(row.data);
+        renderForm(row.data);
 
-      saveRowBtn.innerText = "Atualizar Linha";
+        saveRowBtn.innerText =
+          "Atualizar Linha";
 
-      window.scrollTo({
-        top: 0,
-        behavior: "smooth"
-      });
+        window.scrollTo({
 
-    });
+          top: 0,
+
+          behavior: "smooth"
+
+        });
+
+      }
+    );
 
     // EXCLUIR
-    const deleteButton = document.createElement("button");
+
+    const deleteButton =
+      document.createElement("button");
+
+    deleteButton.type = "button";
 
     deleteButton.innerText = "Excluir";
 
-    deleteButton.classList.add("delete-btn");
+    deleteButton.classList.add(
+      "delete-btn"
+    );
 
-    deleteButton.addEventListener("click", async () => {
+    deleteButton.addEventListener(
+      "click",
+      async () => {
 
-      const confirmar = confirm(
-        `Deseja excluir o ID ${row.id}?`
-      );
+        const confirmar = confirm(
+          `Deseja excluir o ID ${row.id}?`
+        );
 
-      if(!confirmar) return;
+        if(!confirmar) return;
 
-      database.rows = database.rows.filter(
-        item => item.id !== row.id
-      );
+        database.rows =
+          database.rows.filter(
+            item => item.id !== row.id
+          );
 
-      await saveDatabase();
+        await saveDatabase();
 
-      renderTable();
+        renderTable();
 
-    });
+      }
+    );
 
     actions.appendChild(editBtn);
+
     actions.appendChild(deleteButton);
 
     tdAction.appendChild(actions);
@@ -491,76 +557,89 @@ function renderTable(){
 
 }
 
-
 // ======================================
 // EXCLUIR POR ID
 // ======================================
 
-deleteBtn.addEventListener("click", async () => {
+deleteBtn.addEventListener(
+  "click",
+  async () => {
 
-  const id = Number(deleteIdInput.value);
+    const id =
+      Number(deleteIdInput.value);
 
-  if(!id){
+    if(!id){
 
-    alert("Digite um ID válido.");
-    return;
+      alert("Digite um ID válido.");
+
+      return;
+
+    }
+
+    const exists =
+      database.rows.some(
+        row => row.id === id
+      );
+
+    if(!exists){
+
+      alert("ID não encontrado.");
+
+      return;
+
+    }
+
+    database.rows =
+      database.rows.filter(
+        row => row.id !== id
+      );
+
+    deleteIdInput.value = "";
+
+    await saveDatabase();
+
+    renderTable();
 
   }
-
-  const exists = database.rows.some(
-    row => row.id === id
-  );
-
-  if(!exists){
-
-    alert("ID não encontrado.");
-    return;
-
-  }
-
-  database.rows = database.rows.filter(
-    row => row.id !== id
-  );
-
-  deleteIdInput.value = "";
-
-  await saveDatabase();
-
-  renderTable();
-
-});
-
+);
 
 // ======================================
 // LIMPAR TUDO
 // ======================================
 
-clearBtn.addEventListener("click", async () => {
+clearBtn.addEventListener(
+  "click",
+  async () => {
 
-  const confirmar = confirm(
-    "Deseja apagar tudo?"
-  );
+    const confirmar = confirm(
+      "Deseja apagar tudo?"
+    );
 
-  if(!confirmar) return;
+    if(!confirmar) return;
 
-  database = {
-    columns: [],
-    rows: [],
-    nextId: 1
-  };
+    database = {
 
-  currentEditId = null;
+      columns: [],
 
-  await saveDatabase();
+      rows: [],
 
-  renderForm();
-  renderTable();
+      nextId: 1
 
-});
+    };
 
+    currentEditId = null;
+
+    await saveDatabase();
+
+    renderForm();
+
+    renderTable();
+
+  }
+);
 
 // ======================================
-// INICIALIZAÇÃO
+// START
 // ======================================
 
 async function startApp(){
