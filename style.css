@@ -398,3 +398,76 @@ RESPONSIVO
   }
 
 }
+
+.top-actions {
+  display: flex;
+  gap: 10px;
+  margin: 15px 0;
+}
+
+.top-actions button {
+  flex: 1;
+  padding: 10px;
+  border: none;
+  background: #222;
+  color: #fff;
+  border-radius: 8px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.top-actions button:hover {
+  background: #444;
+}
+
+/* MODAL (reutiliza seu padrão) */
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.6);
+  display: none;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+}
+
+.modal.active {
+  display: flex;
+}
+
+.modal-content {
+  background: #fff;
+  width: 100%;
+  max-width: 500px;
+  border-radius: 12px;
+  padding: 20px;
+}
+
+.modal-content h2 {
+  margin-bottom: 15px;
+}
+
+.modal-content button {
+  margin-top: 10px;
+  width: 100%;
+  padding: 10px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+#filterPreviewTable table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 10px;
+}
+
+#filterPreviewTable td,
+#filterPreviewTable th {
+  border: 1px solid #ccc;
+  padding: 5px;
+  font-size: 12px;
+}
